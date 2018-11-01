@@ -3,6 +3,9 @@
 **/*.txt
 **/*.fa
 **/*.narrowPeak
+**/*.h5
+**/*.json
+**/model_files
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

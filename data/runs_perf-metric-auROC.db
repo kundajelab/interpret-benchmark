@@ -1,0 +1,644 @@
+{
+    "metadata": {
+        "total_records": 3,
+        "best_valid_key_metric": 0.7779792103931081,
+        "best_saved_files_config": {
+            "weights_file": "model_files/record_3_model_cPmQR_modelWeights.h5",
+            "json_file": "model_files/record_3_model_cPmQR_modelJson.json",
+            "directory": "model_files",
+            "prefix": "model_cPmQR"
+        }
+    },
+    "records": [
+        {
+            "record_number": 3,
+            "message": "example model and training config",
+            "best_valid_key_metric": 0.7779792103931081,
+            "best_valid_perf_info": {
+                "epoch": 49,
+                "valid_key_metric": 0.7779792103931081,
+                "train_key_metric": 0.7865560949424308,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.7247369241817453,
+                        0.7943429361268369,
+                        0.8225000204437165,
+                        0.7671004130648391,
+                        0.7812157581484024
+                    ],
+                    "mean_auROC": 0.7779792103931081,
+                    "per_output_auPRC": [
+                        0.538225286043772,
+                        0.5846747930880883,
+                        0.6569602826636975,
+                        0.6060024446320571,
+                        0.615265613459669
+                    ],
+                    "mean_auPRC": 0.6002256839774567,
+                    "per_output_balanced_accuracy": [
+                        0.6351802144309311,
+                        0.6642631612299889,
+                        0.7502306248147406,
+                        0.6752758249127194,
+                        0.6970713959786161
+                    ],
+                    "mean_balanced_accuracy": 0.6844042442733992,
+                    "per_output_unbalanced_accuracy": [
+                        0.7410341596388108,
+                        0.8200442967884828,
+                        0.8067765567765568,
+                        0.7799003322259136,
+                        0.7705724508050089
+                    ],
+                    "mean_unbalanced_accuracy": 0.7836655592469545
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.6543679389917936,
+                    0.6577199020516025
+                ],
+                [
+                    0.7184504320046289,
+                    0.7158984495596162
+                ],
+                [
+                    0.7327944645462404,
+                    0.732249919197485
+                ],
+                [
+                    0.7343956057292831,
+                    0.7313715104834854
+                ],
+                [
+                    0.6842728979147119,
+                    0.6799668845366679
+                ],
+                [
+                    0.7455742809867199,
+                    0.7429699685065508
+                ],
+                [
+                    0.7426171928248887,
+                    0.7381441192372622
+                ],
+                [
+                    0.7416652100989484,
+                    0.7409491492058805
+                ],
+                [
+                    0.7454255610855605,
+                    0.7454850730414467
+                ],
+                [
+                    0.7437955326640919,
+                    0.7369599167522481
+                ],
+                [
+                    0.754201157465595,
+                    0.7506095979418196
+                ],
+                [
+                    0.7558875683330708,
+                    0.7539967349900285
+                ],
+                [
+                    0.7637775683412277,
+                    0.7637719687214745
+                ],
+                [
+                    0.7492612759781565,
+                    0.7465574012090634
+                ],
+                [
+                    0.7465969887319154,
+                    0.7415341352078813
+                ],
+                [
+                    0.7647939234476927,
+                    0.7617814183352631
+                ],
+                [
+                    0.7702524944566046,
+                    0.7653981751447011
+                ],
+                [
+                    0.7681143497331503,
+                    0.7651799855966511
+                ],
+                [
+                    0.7417539028536071,
+                    0.7423614845253598
+                ],
+                [
+                    0.7674342742280715,
+                    0.7659664418601952
+                ],
+                [
+                    0.7462576372274685,
+                    0.745154322745939
+                ],
+                [
+                    0.7624443444666357,
+                    0.7618762412821952
+                ],
+                [
+                    0.767871459793551,
+                    0.7627138195817702
+                ],
+                [
+                    0.7556461648347842,
+                    0.7519938032203635
+                ],
+                [
+                    0.7715352362347325,
+                    0.769516834950647
+                ],
+                [
+                    0.7599582809545544,
+                    0.757267439055835
+                ],
+                [
+                    0.752465235246498,
+                    0.7534262741715179
+                ],
+                [
+                    0.7759713542996695,
+                    0.7695100948844977
+                ],
+                [
+                    0.7665048212814314,
+                    0.7619484458537904
+                ],
+                [
+                    0.7666977776556934,
+                    0.7656513217624665
+                ],
+                [
+                    0.7588692130363947,
+                    0.7573562082448813
+                ],
+                [
+                    0.7671476121706009,
+                    0.767303157178962
+                ],
+                [
+                    0.7722652250248856,
+                    0.7700220077781783
+                ],
+                [
+                    0.7677808630398939,
+                    0.7625806400516841
+                ],
+                [
+                    0.7588279661308593,
+                    0.7524921888407404
+                ],
+                [
+                    0.7653718123023252,
+                    0.7623787390599521
+                ],
+                [
+                    0.7761905632995252,
+                    0.7716481552968294
+                ],
+                [
+                    0.776044319049132,
+                    0.7723394599409119
+                ],
+                [
+                    0.764506885220481,
+                    0.7606326814278237
+                ],
+                [
+                    0.7404162346815758,
+                    0.7393587004241764
+                ],
+                [
+                    0.7540329125646643,
+                    0.7500342277504187
+                ],
+                [
+                    0.7797170357215494,
+                    0.7771038584795145
+                ],
+                [
+                    0.780972635509406,
+                    0.7766384264055103
+                ],
+                [
+                    0.7710378246564213,
+                    0.7680258209172808
+                ],
+                [
+                    0.7699098009121224,
+                    0.7684613343431022
+                ],
+                [
+                    0.7740056776572591,
+                    0.7728988151077918
+                ],
+                [
+                    0.7638851642104679,
+                    0.7569628462698091
+                ],
+                [
+                    0.7771808564877194,
+                    0.770778473468321
+                ],
+                [
+                    0.7865560949424308,
+                    0.7779792103931081
+                ],
+                [
+                    0.7789764187773921,
+                    0.770570822980756
+                ],
+                [
+                    0.7721605035210638,
+                    0.7692278382126245
+                ],
+                [
+                    0.7776563183078606,
+                    0.7698346827671487
+                ],
+                [
+                    0.7753122450158836,
+                    0.7677457537250549
+                ],
+                [
+                    0.780468840360666,
+                    0.774576787623951
+                ],
+                [
+                    0.774933383799782,
+                    0.7723919868623229
+                ],
+                [
+                    0.778111226259204,
+                    0.7730106825513057
+                ],
+                [
+                    0.7772370068651298,
+                    0.7685516379611761
+                ],
+                [
+                    0.7847541990805571,
+                    0.7771626461090376
+                ],
+                [
+                    0.7834644922150878,
+                    0.7758716640300511
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_3_model_cPmQR_modelWeights.h5",
+                "json_file": "model_files/record_3_model_cPmQR_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_cPmQR"
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "divergent421_model.weights.h5",
+                    "json_file": "divergent421_model.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 5,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "bed_source": "train_all_labels.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 1234,
+                "samples_per_epoch": 500,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 10
+                    }
+                },
+                "class_weight": null,
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 59
+            }
+        },
+        {
+            "record_number": 2,
+            "message": "example model and training config",
+            "best_valid_key_metric": 0.6305748280864558,
+            "best_valid_perf_info": {
+                "epoch": 1,
+                "valid_key_metric": 0.6305748280864558,
+                "train_key_metric": 0.6419602560055031,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.6158312359784749,
+                        0.6194461260769635,
+                        0.6288778318861058,
+                        0.6323355439060114,
+                        0.656383402584723
+                    ],
+                    "mean_auROC": 0.6305748280864558,
+                    "per_output_auPRC": [
+                        0.41978178691492396,
+                        0.3748579769615227,
+                        0.4563453179087302,
+                        0.4269016742834352,
+                        0.4604981804866745
+                    ],
+                    "mean_auPRC": 0.4276769873110573,
+                    "per_output_balanced_accuracy": [
+                        0.5811708371431582,
+                        0.5730208846572369,
+                        0.5078731190186656,
+                        0.5921535749532736,
+                        0.5308597634903939
+                    ],
+                    "mean_balanced_accuracy": 0.5570156358525457,
+                    "per_output_unbalanced_accuracy": [
+                        0.6350413152738734,
+                        0.7623519890961752,
+                        0.7418434278899395,
+                        0.6231791464349604,
+                        0.7223996933299259
+                    ],
+                    "mean_unbalanced_accuracy": 0.6969631144049749
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "KeyboardInterrupt",
+                "total_epochs_trained_for": 3
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "bed_source": "train_all_labels.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 1234,
+                "samples_per_epoch": 500,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 10
+                    }
+                },
+                "class_weight": null,
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "divergent421_model.weights.h5",
+                    "json_file": "divergent421_model.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 5,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.6419602560055031,
+                    0.6305748280864558
+                ],
+                [
+                    0.6114412356018397,
+                    0.6133299247903485
+                ],
+                [
+                    0.4999927557229788,
+                    0.5
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_2_model_CCp9o_modelWeights.h5",
+                "json_file": "model_files/record_2_model_CCp9o_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_CCp9o"
+            }
+        },
+        {
+            "record_number": 1,
+            "message": "example model and training config",
+            "best_valid_key_metric": 0.6072654844409918,
+            "best_valid_perf_info": {
+                "epoch": 1,
+                "valid_key_metric": 0.6072654844409918,
+                "train_key_metric": 0.6085697606256691,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.5638644875843941,
+                        0.5864842382339053,
+                        0.6630667614786215,
+                        0.6074213827700466,
+                        0.6154905521379914
+                    ],
+                    "mean_auROC": 0.6072654844409918,
+                    "per_output_auPRC": [
+                        0.3371170211858865,
+                        0.30458572465555805,
+                        0.49416422437214547,
+                        0.3571415883286866,
+                        0.38444274449039995
+                    ],
+                    "mean_auPRC": 0.3754902606065353,
+                    "per_output_balanced_accuracy": [
+                        0.5323077981562115,
+                        0.5509060629763203,
+                        0.5743305817591484,
+                        0.5008576627350467,
+                        0.5018004783526954
+                    ],
+                    "mean_balanced_accuracy": 0.5320405167958844,
+                    "per_output_unbalanced_accuracy": [
+                        0.3882357952125394,
+                        0.43885765397393306,
+                        0.7709557883976489,
+                        0.28224295084760204,
+                        0.29602180764971464
+                    ],
+                    "mean_unbalanced_accuracy": 0.43526279921628763
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 4
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "bed_source": "train_all_labels.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 1234,
+                "samples_per_epoch": 300,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": null,
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "divergent421_model.weights.h5",
+                    "json_file": "divergent421_model.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 5,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.6085697606256691,
+                    0.6072654844409918
+                ],
+                [
+                    0.5455201976295875,
+                    0.5496973692440433
+                ],
+                [
+                    0.5000943581722928,
+                    0.5002491049786446
+                ],
+                [
+                    0.5027863500435702,
+                    0.5025067433620842
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_1_model_11SwF_modelWeights.h5",
+                "json_file": "model_files/record_1_model_11SwF_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_11SwF"
+            }
+        }
+    ]
+}
