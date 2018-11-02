@@ -6,6 +6,7 @@
 **/*.h5
 **/*.json
 **/model_files
+**/*.npz
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

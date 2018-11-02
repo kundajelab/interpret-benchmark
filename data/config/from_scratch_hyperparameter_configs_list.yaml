@@ -21,8 +21,9 @@
             "kwargs": {
                 "layers_config": [
                     {
-                        "class": "keras.layers.convolution.Convolution1D",
-                        "config": {
+                        "class": "keras.layers.convolutional.Convolution1D",
+                        "kwargs": {
+                            "input_shape": [1000,4],
                             "filter_length": 19,
                             "border_mode": "valid",
                             "nb_filter": 300,
@@ -30,30 +31,30 @@
                     },
                     {
                         "class": "keras.layers.normalization.BatchNormalization",
-                        "config": {}
+                        "kwargs": {}
                     },
                     {
                         "class": "keras.layers.Activation",
-                        "config": {"activation": "relu"}
+                        "kwargs": {"activation": "relu"}
                     },
                     {
                         "class": "keras.layers.pooling.MaxPooling1D",
-                        "config": {
+                        "kwargs": {
                             "border_mode": "valid",
                             "pool_length": 3,
                             "stride": 3
                         }
                     },
                     {
-                        "class": "keras.layers.convolution.Convolution1D",
-                        "config": {
+                        "class": "keras.layers.convolutional.Convolution1D",
+                        "kwargs": {
                             "filter_length": 11,
                             "border_mode": "valid",
                             "nb_filter": 200,
                             "W_constraint": {
                                 "autoload": true,                                   
-                                "class": "MaxNorm",
-                                "config": {
+                                "class": "keras.constraints.MaxNorm",
+                                "kwargs": {
                                     "axis": 0,
                                     "max_value": 7
                                 }
@@ -62,30 +63,30 @@
                     },
                     {
                         "class": "keras.layers.normalization.BatchNormalization",
-                        "config": {}
+                        "kwargs": {}
                     },
                     {
                         "class": "keras.layers.Activation",
-                        "config": {"activation": "relu"}
+                        "kwargs": {"activation": "relu"}
                     },
                     {
                         "class": "keras.layers.pooling.MaxPooling1D",
-                        "config": {
+                        "kwargs": {
                             "border_mode": "valid",
                             "pool_length": 4,
                             "stride": 4
                         }
                     },
                     {
-                        "class": "keras.layers.convolution.Convolution1D",
-                        "config": {
+                        "class": "keras.layers.convolutional.Convolution1D",
+                        "kwargs": {
                             "filter_length": 7,
                             "border_mode": "valid",
                             "nb_filter": 200,
                             "W_constraint": {
                                 "autoload": true,                                   
-                                "class": "MaxNorm",
-                                "config": {
+                                "class": "keras.constraints.MaxNorm",
+                                "kwargs": {
                                     "axis": 0,
                                     "max_value": 7
                                 }
@@ -94,15 +95,15 @@
                     },
                     {
                         "class": "keras.layers.normalization.BatchNormalization",
-                        "config": {}
+                        "kwargs": {}
                     },
                     {
                         "class": "keras.layers.Activation",
-                        "config": {"activation": "relu"}
+                        "kwargs": {"activation": "relu"}
                     },
                     {
                         "class": "keras.layers.core.Flatten",
-                        "config": {}
+                        "kwargs": {}
                     },
                     {
                         "class": "keras.layers.core.Dense",
@@ -110,7 +111,7 @@
                             "output_dim": 1000,
                             "activity_regularizer": {                               
                                 "autoload": true,                                   
-                                "class": "keras.regularizers.ActivityRegularizer",  
+                                "class": "keras.regularizers.L1L2",  
                                 "kwargs": {"l1":0.00001}                            
                             },
                             "W_constraint": {                                       
@@ -122,29 +123,56 @@
                     },
                     {
                         "class": "keras.layers.normalization.BatchNormalization",
-                        "config": {}
+                        "kwargs": {}
                     },
                     {
                         "class": "keras.layers.advanced_activations.PReLU",
-                        "config": {}
+                        "kwargs": {}
                     },
                     {
                         "class": "keras.layers.core.Dropout",
-                        "config": {"p": 0.3}
+                        "kwargs": {"p": 0.3}
                     },
                     {
                         "class": "keras.layers.core.Dense",
-                        "kwargs": {"output_dim": 5, "name":"dense_3"}
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "activity_regularizer": {                               
+                                "autoload": true,                                   
+                                "class": "keras.regularizers.L1L2",  
+                                "kwargs": {"l1":0.00001}                            
+                            },
+                            "W_constraint": {                                       
+                                "autoload": true,                                   
+                                "class": "keras.constraints.MaxNorm",               
+                                "kwargs": {"max_value": 7, "axis": 0}                       
+                            }
+                        }
                     },
                     {
-
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {}
+                    },
+                    {
+                        "class": "keras.layers.advanced_activations.PReLU",
+                        "kwargs": {}
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {"p": 0.3}
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 5}
+                    },
+                    {
                         "class": "keras.layers.core.Activation",
                         "kwargs": {"activation": "sigmoid"}
                      }
                 ],
                 "optimizer_config": {
                     "class": "keras.optimizers.Adam",
-                    "kwargs": {"lr": 0.001}
+                    "kwargs": {"lr": 0.0001}
                 },
                 "loss": {
                     "modules_to_load": ["keras_genomics"],
