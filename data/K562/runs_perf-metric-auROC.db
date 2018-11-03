@@ -1,0 +1,233 @@
+{
+    "metadata": {
+        "total_records": 1,
+        "best_valid_key_metric": 0.8722159769234827,
+        "best_saved_files_config": {
+            "weights_file": "model_files/record_1_model_bV33A_modelWeights.h5",
+            "json_file": "model_files/record_1_model_bV33A_modelJson.json",
+            "directory": "model_files",
+            "prefix": "model_bV33A"
+        }
+    },
+    "records": [
+        {
+            "record_number": 1,
+            "message": "dan model preinit",
+            "best_valid_key_metric": 0.8722159769234827,
+            "best_valid_perf_info": {
+                "epoch": 24,
+                "valid_key_metric": 0.8722159769234827,
+                "train_key_metric": 0.8701251128625854,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8722159769234827
+                    ],
+                    "mean_auROC": 0.8722159769234827,
+                    "per_output_auPRC": [
+                        0.05240861756427525
+                    ],
+                    "mean_auPRC": 0.05240861756427525,
+                    "per_output_balanced_accuracy": [
+                        0.8103672567561244
+                    ],
+                    "mean_balanced_accuracy": 0.8103672567561244,
+                    "per_output_unbalanced_accuracy": [
+                        0.7963269584238428
+                    ],
+                    "mean_unbalanced_accuracy": 0.7963269584238428
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8489735763762734,
+                    0.8420911201809
+                ],
+                [
+                    0.8569164334276513,
+                    0.8508248814361288
+                ],
+                [
+                    0.8598692143830584,
+                    0.8549985885846119
+                ],
+                [
+                    0.8510134810369168,
+                    0.8573865690010365
+                ],
+                [
+                    0.8571230239276729,
+                    0.8595138731926664
+                ],
+                [
+                    0.8527481872237372,
+                    0.86056795405009
+                ],
+                [
+                    0.855961595340288,
+                    0.8616429447651176
+                ],
+                [
+                    0.861997739925365,
+                    0.8636271408955991
+                ],
+                [
+                    0.8648601504291522,
+                    0.8634415161239896
+                ],
+                [
+                    0.8674587029492221,
+                    0.8640811710715107
+                ],
+                [
+                    0.8629940899549664,
+                    0.8648329302377451
+                ],
+                [
+                    0.8633746486612042,
+                    0.8640653268758383
+                ],
+                [
+                    0.8624068070314708,
+                    0.8654308401481214
+                ],
+                [
+                    0.8662337779993527,
+                    0.8649489426084153
+                ],
+                [
+                    0.8636107698250839,
+                    0.8658541029621303
+                ],
+                [
+                    0.8595959315172141,
+                    0.8656352588988869
+                ],
+                [
+                    0.8712687895853518,
+                    0.8667460701914048
+                ],
+                [
+                    0.86518423328867,
+                    0.8680361337275008
+                ],
+                [
+                    0.8656601329721896,
+                    0.8682926030880873
+                ],
+                [
+                    0.8673569432591219,
+                    0.868588415341463
+                ],
+                [
+                    0.8710019577428065,
+                    0.8698507235308586
+                ],
+                [
+                    0.8602169499502073,
+                    0.8687170607511019
+                ],
+                [
+                    0.863350332707292,
+                    0.870789401888459
+                ],
+                [
+                    0.8701251128625854,
+                    0.8722159769234827
+                ],
+                [
+                    0.8759941205964071,
+                    0.8701032847394882
+                ],
+                [
+                    0.8670286877404432,
+                    0.8720179182544052
+                ],
+                [
+                    0.8691906478416677,
+                    0.8712495307728383
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_1_model_bV33A_modelWeights.h5",
+                "json_file": "model_files/record_1_model_bV33A_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_bV33A"
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output_act"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 1234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 27
+            }
+        }
+    ]
+}
