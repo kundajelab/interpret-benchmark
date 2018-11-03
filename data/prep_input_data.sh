@@ -29,6 +29,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     zcat $task_labels | egrep -w 'chr8|chrX' | gzip -c > $task_name"/valid_labels.gz"
     zcat $task_labels | egrep -w 'chrY' | gzip -c > $task_name"/test_labels.gz"
     zcat $task_name"/valid_labels.gz" | perl -lane 'if ($.%30==0) {print $_}' | gzip -c > $task_name"/small_valid_labels.gz"
+    zcat $task_name"/valid_labels.gz" | perl -lane 'if ($.%30!=0 && $F[3]==1) {print $_}' | gzip -c > $task_name"/positives_not_in_small_valid_labels.gz"
 
 done < $INP_FILE_PATHS
 
