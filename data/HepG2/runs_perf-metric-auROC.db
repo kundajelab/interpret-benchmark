@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "total_records": 19,
+        "total_records": 20,
         "best_valid_key_metric": 0.9046610333946248,
         "best_saved_files_config": {
             "weights_file": "model_files/record_7_model_2ObnU_modelWeights.h5",
@@ -240,6 +240,76 @@
                     "mean_unbalanced_accuracy": 0.83410629490676
                 }
             },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 14
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 7234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output_act"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
             "key_metric_history": [
                 [
                     "train",
@@ -308,76 +378,6 @@
                 "json_file": "model_files/record_19_model_h9WFI_modelJson.json",
                 "directory": "model_files",
                 "prefix": "model_h9WFI"
-            },
-            "model_creator_info": {
-                "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3
-                },
-                "layers_config": [
-                    {
-                        "class": "keras.layers.core.Dense",
-                        "kwargs": {
-                            "output_dim": 1,
-                            "name": "dense_3"
-                        }
-                    },
-                    {
-                        "class": "keras.layers.core.Activation",
-                        "kwargs": {
-                            "activation": "sigmoid",
-                            "name": "output_act"
-                        }
-                    }
-                ],
-                "optimizer_config": {
-                    "class": "keras.optimizers.Adam",
-                    "kwargs": {
-                        "lr": 0.0001
-                    }
-                },
-                "loss": {
-                    "modules_to_load": [
-                        "keras_genomics"
-                    ],
-                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
-                }
-            },
-            "other_data_loaders_info": {
-                "train": {
-                    "batch_size": 200,
-                    "rc_augment": true,
-                    "num_to_load_for_eval": 50000,
-                    "wrap_in_keys": null,
-                    "positives_bed_source": "naive_window_around_summit.bed.gz",
-                    "negatives_bed_source": "universal_negatives.bed.gz",
-                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
-                    "labels_dtype": "int",
-                    "randomize_after_pass": true,
-                    "random_seed": 1
-                }
-            },
-            "model_trainer_info": {
-                "seed": 7234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping",
-                    "kwargs": {
-                        "max_epochs": 300,
-                        "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {
-                    "0": 1,
-                    "1": 10
-                },
-                "report_all_valid_metrics_every_epoch": false,
-                "reparameterizer": null
-            },
-            "training_metadata": {
-                "termination_condition": "normal",
-                "total_epochs_trained_for": 14
             }
         },
         {
@@ -565,6 +565,193 @@
                 "json_file": "model_files/record_17_model_Fljbs_modelJson.json",
                 "directory": "model_files",
                 "prefix": "model_Fljbs"
+            }
+        },
+        {
+            "record_number": 20,
+            "message": "dan-model-preinit seed-8234",
+            "best_valid_key_metric": 0.9031052215176972,
+            "best_valid_perf_info": {
+                "epoch": 16,
+                "valid_key_metric": 0.9031052215176972,
+                "train_key_metric": 0.9030271264707002,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.9031052215176972
+                    ],
+                    "mean_auROC": 0.9031052215176972,
+                    "per_output_auPRC": [
+                        0.049145839255590795
+                    ],
+                    "mean_auPRC": 0.049145839255590795,
+                    "per_output_balanced_accuracy": [
+                        0.8342051419969014
+                    ],
+                    "mean_balanced_accuracy": 0.8342051419969014,
+                    "per_output_unbalanced_accuracy": [
+                        0.8416236346268327
+                    ],
+                    "mean_unbalanced_accuracy": 0.8416236346268327
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8856411686091136,
+                    0.8852323176792842
+                ],
+                [
+                    0.8889163436294688,
+                    0.890931318910875
+                ],
+                [
+                    0.8926273509914763,
+                    0.8953637340946178
+                ],
+                [
+                    0.894691536464143,
+                    0.8972574327091712
+                ],
+                [
+                    0.8935330519170805,
+                    0.8984267784763018
+                ],
+                [
+                    0.8953244957637246,
+                    0.8997464610114907
+                ],
+                [
+                    0.9014055192419458,
+                    0.899660293370486
+                ],
+                [
+                    0.9067179248297923,
+                    0.900940267691094
+                ],
+                [
+                    0.9076466205319936,
+                    0.9009306137843047
+                ],
+                [
+                    0.9019074480543569,
+                    0.9018666839828182
+                ],
+                [
+                    0.8977022108091836,
+                    0.9029094526815389
+                ],
+                [
+                    0.9018026588514398,
+                    0.9027236802049445
+                ],
+                [
+                    0.8991931787232104,
+                    0.9022859929444291
+                ],
+                [
+                    0.8960963633631356,
+                    0.9029908259836988
+                ],
+                [
+                    0.9020082123217128,
+                    0.9024358731087883
+                ],
+                [
+                    0.9030271264707002,
+                    0.9031052215176972
+                ],
+                [
+                    0.8987753504163916,
+                    0.9029629242362047
+                ],
+                [
+                    0.8984768756512364,
+                    0.9027789618671334
+                ],
+                [
+                    0.8997294412759527,
+                    0.9025729683695615
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_20_model_QFbAM_modelWeights.h5",
+                "json_file": "model_files/record_20_model_QFbAM_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_QFbAM"
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output_act"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 8234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 19
             }
         },
         {
