@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-WINDOW_AROUND_SUMMIT_UNIVERSAL_PEAKS="universal_negatives_window_around_summit.bed.gz"
+WINDOW_AROUND_SUMMIT_UNIVERSAL_PEAKS="sorted_universal_negatives_window_around_summit.bed.gz"
 INP_FILE_PATHS="data_paths.txt"
 
 if [ ! -e $WINDOW_AROUND_SUMMIT_UNIVERSAL_PEAKS ]; then 
-    cat /srv/scratch/annashch/deeplearning/gecco/encode_dnase/all_dnase_idr_peaks.sorted.bed | perl -lane 'print $F[0]."\t".(($F[1]+$F[9]))."\t".(($F[1]+$F[9]))' | bedtools slop -g hg19.chrom.sizes -b 500 | perl -lane 'if ($F[2]-$F[1]==1000) {print $_}' | gzip -c > $WINDOW_AROUND_SUMMIT_UNIVERSAL_PEAKS
+    cat /srv/scratch/annashch/deeplearning/gecco/encode_dnase/all_dnase_idr_peaks.sorted.bed | perl -lane 'print $F[0]."\t".(($F[1]+$F[9]))."\t".(($F[1]+$F[9]))' | bedtools slop -g hg19.chrom.sizes -b 500 | perl -lane 'if ($F[2]-$F[1]==1000) {print $_}' | sortBed | gzip -c > $WINDOW_AROUND_SUMMIT_UNIVERSAL_PEAKS
 fi
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
