@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+CUDA_VISIBLE_DEVICES=3
+
+./compute_imp_scores.py --model_ids record_20_model_QFbAM record_19_model_h9WFI record_18_model_u5eMJ record_17_model_Fljbs record_16_model_tSI7v record_14_model_g60lE record_11_model_0XKud record_7_model_2ObnU record_4_model_Dvrnb
