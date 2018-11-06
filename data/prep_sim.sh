@@ -27,5 +27,7 @@ zcat nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_re
 
 zcat dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz | egrep -v -w 'chr1|chr2' | gzip -c > train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz
 
+zcat dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz | egrep -w 'chr1' | gzip -c > test_set_positives.bed.gz
+
 #Use a real data validation set
 ln -s ../HepG2/valid_labels.gz .

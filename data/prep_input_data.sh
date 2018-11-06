@@ -31,6 +31,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 
     zcat $task_labels | egrep -w 'chr2' | gzip -c > $task_name"/valid_labels.gz"
     zcat $task_labels | egrep -w 'chr1' | gzip -c > $task_name"/test_labels.gz"
+    zcat $task_name"/test_labels.gz" | perl -lane 'if ($F[3]==1) {print $_}' | gzip -c > $task_name"/positive_test_examples.gz"
 
 done < $INP_FILE_PATHS
 

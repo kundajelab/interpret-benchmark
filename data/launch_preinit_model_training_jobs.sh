@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ./prep_preinit_hypconfig.py
-for cell_type in HepG2 GM12878 K562 MCF-7; do
+for cell_type in HepG2 GM12878 K562 A549 MCF-7; do
     cd $cell_type
     echo "On $cell_type"
     [[ -e train_preinit_model.sh ]] || ln -s ../train_preinit_model.sh .
