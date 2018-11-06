@@ -8,11 +8,11 @@ import os
 def get_data(seed):
     data = """
     {
-        "message": "train-from-scratch seed-"""+str(seed)+"""",
+        "message": "train-from-scratch seed-"""+str(234 + 1000*seed)+"""",
         "model_trainer":{
             "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
             "kwargs": {
-                "seed": """+str(seed)+""",
+                "seed": """+str(234 + 1000*seed)+""",
                 "samples_per_epoch": 2000,
                 "stopping_criterion_config": {
                     "class": "EarlyStopping" ,
@@ -156,9 +156,10 @@ def get_data(seed):
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": """+str(234 + 1000*seed)+""",
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -174,7 +175,7 @@ def prep_preinit_hypconfig(options):
     fh = open("from_scratch_hyperparameter_configs_list.yaml","w")
     fh.write("[")
     for i in range(10):
-        fh.write(get_data(234+1000*i)) 
+        fh.write(get_data(i)) 
     fh.write("\n]")
     fh.close()
 

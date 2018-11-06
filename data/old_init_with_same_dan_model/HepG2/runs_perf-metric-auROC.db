@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "total_records": 21,
+        "total_records": 27,
         "best_valid_key_metric": 0.9050232832010737,
         "best_saved_files_config": {
             "weights_file": "model_files/record_21_model_NZqHC_modelWeights.h5",
@@ -35,6 +35,76 @@
                         0.838107236304736
                     ],
                     "mean_unbalanced_accuracy": 0.838107236304736
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 19
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 9234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output_act"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
                 }
             },
             "key_metric_history": [
@@ -125,76 +195,6 @@
                 "json_file": "model_files/record_21_model_NZqHC_modelJson.json",
                 "directory": "model_files",
                 "prefix": "model_NZqHC"
-            },
-            "model_creator_info": {
-                "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3
-                },
-                "layers_config": [
-                    {
-                        "class": "keras.layers.core.Dense",
-                        "kwargs": {
-                            "output_dim": 1,
-                            "name": "dense_3"
-                        }
-                    },
-                    {
-                        "class": "keras.layers.core.Activation",
-                        "kwargs": {
-                            "activation": "sigmoid",
-                            "name": "output_act"
-                        }
-                    }
-                ],
-                "optimizer_config": {
-                    "class": "keras.optimizers.Adam",
-                    "kwargs": {
-                        "lr": 0.0001
-                    }
-                },
-                "loss": {
-                    "modules_to_load": [
-                        "keras_genomics"
-                    ],
-                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
-                }
-            },
-            "other_data_loaders_info": {
-                "train": {
-                    "batch_size": 200,
-                    "rc_augment": true,
-                    "num_to_load_for_eval": 50000,
-                    "wrap_in_keys": null,
-                    "positives_bed_source": "naive_window_around_summit.bed.gz",
-                    "negatives_bed_source": "universal_negatives.bed.gz",
-                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
-                    "labels_dtype": "int",
-                    "randomize_after_pass": true,
-                    "random_seed": 1
-                }
-            },
-            "model_trainer_info": {
-                "seed": 9234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping",
-                    "kwargs": {
-                        "max_epochs": 300,
-                        "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {
-                    "0": 1,
-                    "1": 10
-                },
-                "report_all_valid_metrics_every_epoch": false,
-                "reparameterizer": null
-            },
-            "training_metadata": {
-                "termination_condition": "normal",
-                "total_epochs_trained_for": 19
             }
         },
         {
@@ -2001,6 +2001,1184 @@
                 "json_file": "model_files/record_18_model_u5eMJ_modelJson.json",
                 "directory": "model_files",
                 "prefix": "model_u5eMJ"
+            }
+        },
+        {
+            "record_number": 27,
+            "message": "fcfromscratch-randinporder seed-2234",
+            "best_valid_key_metric": 0.8909704563708316,
+            "best_valid_perf_info": {
+                "epoch": 10,
+                "valid_key_metric": 0.8909704563708316,
+                "train_key_metric": 0.8907301718240945,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8909704563708316
+                    ],
+                    "mean_auROC": 0.8909704563708316,
+                    "per_output_auPRC": [
+                        0.03925908651420641
+                    ],
+                    "mean_auPRC": 0.03925908651420641,
+                    "per_output_balanced_accuracy": [
+                        0.8183640756994142
+                    ],
+                    "mean_balanced_accuracy": 0.8183640756994142,
+                    "per_output_unbalanced_accuracy": [
+                        0.837899574986502
+                    ],
+                    "mean_unbalanced_accuracy": 0.837899574986502
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8815327136763301,
+                    0.8775407305176497
+                ],
+                [
+                    0.8760319359481201,
+                    0.8781257050858021
+                ],
+                [
+                    0.8847971831183311,
+                    0.8795980563293719
+                ],
+                [
+                    0.8848400856454284,
+                    0.8820145172580218
+                ],
+                [
+                    0.8861874609103316,
+                    0.8774990002009708
+                ],
+                [
+                    0.8787550835563832,
+                    0.8811403168607895
+                ],
+                [
+                    0.8884431896948712,
+                    0.8854934297662952
+                ],
+                [
+                    0.8854034655806984,
+                    0.8854328156251873
+                ],
+                [
+                    0.8822675399161544,
+                    0.8855282457983817
+                ],
+                [
+                    0.8907301718240945,
+                    0.8909704563708316
+                ],
+                [
+                    0.8880990847905542,
+                    0.8874524390171514
+                ],
+                [
+                    0.8860857883308237,
+                    0.8856222572386526
+                ],
+                [
+                    0.888906982793452,
+                    0.8834759263200788
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_27_model_wxoGL_modelWeights.h5",
+                "json_file": "model_files/record_27_model_wxoGL_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_wxoGL"
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -10
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 2234
+                }
+            },
+            "model_trainer_info": {
+                "seed": 2234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 13
+            }
+        },
+        {
+            "record_number": 26,
+            "message": "fcfromscratch-randinporder seed-1234",
+            "best_valid_key_metric": 0.8880748713959372,
+            "best_valid_perf_info": {
+                "epoch": 4,
+                "valid_key_metric": 0.8880748713959372,
+                "train_key_metric": 0.883486998222395,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8880748713959372
+                    ],
+                    "mean_auROC": 0.8880748713959372,
+                    "per_output_auPRC": [
+                        0.04077541332260465
+                    ],
+                    "mean_auPRC": 0.04077541332260465,
+                    "per_output_balanced_accuracy": [
+                        0.8135930236433961
+                    ],
+                    "mean_balanced_accuracy": 0.8135930236433961,
+                    "per_output_unbalanced_accuracy": [
+                        0.8168427173175695
+                    ],
+                    "mean_unbalanced_accuracy": 0.8168427173175695
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 7
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1234
+                }
+            },
+            "model_trainer_info": {
+                "seed": 1234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -10
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8831523101022483,
+                    0.8792882996410899
+                ],
+                [
+                    0.8779767700602595,
+                    0.8804147246604679
+                ],
+                [
+                    0.8811827589709342,
+                    0.8804683103660585
+                ],
+                [
+                    0.883486998222395,
+                    0.8880748713959372
+                ],
+                [
+                    0.8750613887701013,
+                    0.8863470666897753
+                ],
+                [
+                    0.8835146562893819,
+                    0.885469262384772
+                ],
+                [
+                    0.8871222858105886,
+                    0.8845071494681122
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_26_model_g8qTZ_modelWeights.h5",
+                "json_file": "model_files/record_26_model_g8qTZ_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_g8qTZ"
+            }
+        },
+        {
+            "record_number": 23,
+            "message": "fcfromscratch seed-1234",
+            "best_valid_key_metric": 0.8859801693099563,
+            "best_valid_perf_info": {
+                "epoch": 3,
+                "valid_key_metric": 0.8859801693099563,
+                "train_key_metric": 0.8820653634909171,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8859801693099563
+                    ],
+                    "mean_auROC": 0.8859801693099563,
+                    "per_output_auPRC": [
+                        0.04150849507922544
+                    ],
+                    "mean_auPRC": 0.04150849507922544,
+                    "per_output_balanced_accuracy": [
+                        0.8083266707243515
+                    ],
+                    "mean_balanced_accuracy": 0.8083266707243515,
+                    "per_output_unbalanced_accuracy": [
+                        0.8248861323771683
+                    ],
+                    "mean_unbalanced_accuracy": 0.8248861323771683
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 6
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 1234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -10
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8814260201390784,
+                    0.8748209705816107
+                ],
+                [
+                    0.8824159341249672,
+                    0.8764596886445465
+                ],
+                [
+                    0.8820653634909171,
+                    0.8859801693099563
+                ],
+                [
+                    0.8796520619614822,
+                    0.8786001652514017
+                ],
+                [
+                    0.8816485320481127,
+                    0.8830976464623226
+                ],
+                [
+                    0.8803330846745347,
+                    0.8796717815195654
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_23_model_B40uq_modelWeights.h5",
+                "json_file": "model_files/record_23_model_B40uq_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_B40uq"
+            }
+        },
+        {
+            "record_number": 24,
+            "message": "fcfromscratch seed-2234",
+            "best_valid_key_metric": 0.885758357755652,
+            "best_valid_perf_info": {
+                "epoch": 5,
+                "valid_key_metric": 0.885758357755652,
+                "train_key_metric": 0.8802486115975053,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.885758357755652
+                    ],
+                    "mean_auROC": 0.885758357755652,
+                    "per_output_auPRC": [
+                        0.040075496676746154
+                    ],
+                    "mean_auPRC": 0.040075496676746154,
+                    "per_output_balanced_accuracy": [
+                        0.8055715240016017
+                    ],
+                    "mean_balanced_accuracy": 0.8055715240016017,
+                    "per_output_unbalanced_accuracy": [
+                        0.8147799482231113
+                    ],
+                    "mean_unbalanced_accuracy": 0.8147799482231113
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 8
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 2234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -10
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8815245518977904,
+                    0.8772670944434526
+                ],
+                [
+                    0.8834624644564191,
+                    0.8783812726993192
+                ],
+                [
+                    0.8819464551128507,
+                    0.8837174533698364
+                ],
+                [
+                    0.883567844666999,
+                    0.8837717565955262
+                ],
+                [
+                    0.8802486115975053,
+                    0.885758357755652
+                ],
+                [
+                    0.8772090810624263,
+                    0.8827061087900061
+                ],
+                [
+                    0.8905044827981843,
+                    0.8812657524199506
+                ],
+                [
+                    0.8911331405840487,
+                    0.8848698558782606
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_24_model_3AHus_modelWeights.h5",
+                "json_file": "model_files/record_24_model_3AHus_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_3AHus"
+            }
+        },
+        {
+            "record_number": 25,
+            "message": "fcfromscratch-randinporder seed-234",
+            "best_valid_key_metric": 0.8854003315334232,
+            "best_valid_perf_info": {
+                "epoch": 6,
+                "valid_key_metric": 0.8854003315334232,
+                "train_key_metric": 0.8901436150713793,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8854003315334232
+                    ],
+                    "mean_auROC": 0.8854003315334232,
+                    "per_output_auPRC": [
+                        0.03861466445512702
+                    ],
+                    "mean_auPRC": 0.03861466445512702,
+                    "per_output_balanced_accuracy": [
+                        0.8208833866113749
+                    ],
+                    "mean_balanced_accuracy": 0.8208833866113749,
+                    "per_output_unbalanced_accuracy": [
+                        0.8174518571843894
+                    ],
+                    "mean_unbalanced_accuracy": 0.8174518571843894
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 9
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 234
+                }
+            },
+            "model_trainer_info": {
+                "seed": 234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -10
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8808331406092139,
+                    0.8734055643422778
+                ],
+                [
+                    0.8806777597729549,
+                    0.8785368114880969
+                ],
+                [
+                    0.8860921812803945,
+                    0.8790160496852665
+                ],
+                [
+                    0.8812347646160534,
+                    0.8850233073358407
+                ],
+                [
+                    0.8857583904293256,
+                    0.8841244503388358
+                ],
+                [
+                    0.8901436150713793,
+                    0.8854003315334232
+                ],
+                [
+                    0.8773457116065243,
+                    0.880320664298372
+                ],
+                [
+                    0.8827734540381575,
+                    0.8841950119176827
+                ],
+                [
+                    0.8846849314413505,
+                    0.8833968197291413
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_25_model_Fq78N_modelWeights.h5",
+                "json_file": "model_files/record_25_model_Fq78N_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_Fq78N"
+            }
+        },
+        {
+            "record_number": 22,
+            "message": "fcfromscratch seed-234",
+            "best_valid_key_metric": 0.8810344826461567,
+            "best_valid_perf_info": {
+                "epoch": 1,
+                "valid_key_metric": 0.8810344826461567,
+                "train_key_metric": 0.8827320934450421,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8810344826461567
+                    ],
+                    "mean_auROC": 0.8810344826461567,
+                    "per_output_auPRC": [
+                        0.04413225007019499
+                    ],
+                    "mean_auPRC": 0.04413225007019499,
+                    "per_output_balanced_accuracy": [
+                        0.8083739292072493
+                    ],
+                    "mean_balanced_accuracy": 0.8083739292072493,
+                    "per_output_unbalanced_accuracy": [
+                        0.7856381432309333
+                    ],
+                    "mean_unbalanced_accuracy": 0.7856381432309333
+                }
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 4
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -10
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_1_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1000,
+                            "name": "dense_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.normalization.BatchNormalization",
+                        "kwargs": {
+                            "name": "batchnorm_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.Activation",
+                        "kwargs": {
+                            "activation": "relu",
+                            "name": "activation_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dropout",
+                        "kwargs": {
+                            "p": 0.3,
+                            "name": "dropout_2_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3_fromscratch"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8827320934450421,
+                    0.8810344826461567
+                ],
+                [
+                    0.8838401731003762,
+                    0.87837148833433
+                ],
+                [
+                    0.8782061319623649,
+                    0.8801214709344675
+                ],
+                [
+                    0.8812869112748252,
+                    0.8784167736369548
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_22_model_JqeXB_modelWeights.h5",
+                "json_file": "model_files/record_22_model_JqeXB_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_JqeXB"
             }
         },
         {

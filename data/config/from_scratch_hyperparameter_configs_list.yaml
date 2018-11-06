@@ -148,9 +148,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -309,9 +310,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 1234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -470,9 +472,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 2234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -631,9 +634,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 3234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -792,9 +796,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 4234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -953,9 +958,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 5234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -1114,9 +1120,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 6234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -1275,9 +1282,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 7234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -1436,9 +1444,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 8234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -1597,9 +1606,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 9234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,

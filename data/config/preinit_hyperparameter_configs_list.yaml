@@ -1,6 +1,6 @@
 [
     {
-        "message": "dan-model-preinit seed-234",
+        "message": "celltype-HepG2 dan-model-preinit seed-234",
         "model_trainer":{
             "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
             "kwargs": {
@@ -20,10 +20,10 @@
             "class": "flexible_keras.FlexibleKerasSequential",
             "kwargs": {
                 "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_0.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2 
                 },
                 "layers_config": [
                     {
@@ -50,9 +50,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -63,7 +64,7 @@
         },
     },
     {
-        "message": "dan-model-preinit seed-1234",
+        "message": "celltype-GM12878 dan-model-preinit seed-1234",
         "model_trainer":{
             "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
             "kwargs": {
@@ -83,10 +84,10 @@
             "class": "flexible_keras.FlexibleKerasSequential",
             "kwargs": {
                 "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_1.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2 
                 },
                 "layers_config": [
                     {
@@ -113,9 +114,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 1234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -126,7 +128,7 @@
         },
     },
     {
-        "message": "dan-model-preinit seed-2234",
+        "message": "celltype-K562 dan-model-preinit seed-2234",
         "model_trainer":{
             "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
             "kwargs": {
@@ -146,10 +148,10 @@
             "class": "flexible_keras.FlexibleKerasSequential",
             "kwargs": {
                 "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_2.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2 
                 },
                 "layers_config": [
                     {
@@ -176,9 +178,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 2234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -189,7 +192,7 @@
         },
     },
     {
-        "message": "dan-model-preinit seed-3234",
+        "message": "celltype-A549 dan-model-preinit seed-3234",
         "model_trainer":{
             "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
             "kwargs": {
@@ -209,10 +212,10 @@
             "class": "flexible_keras.FlexibleKerasSequential",
             "kwargs": {
                 "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_3.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2 
                 },
                 "layers_config": [
                     {
@@ -239,9 +242,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 3234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,
@@ -252,7 +256,7 @@
         },
     },
     {
-        "message": "dan-model-preinit seed-4234",
+        "message": "celltype-MCF-7 dan-model-preinit seed-4234",
         "model_trainer":{
             "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
             "kwargs": {
@@ -272,10 +276,10 @@
             "class": "flexible_keras.FlexibleKerasSequential",
             "kwargs": {
                 "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_4.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2 
                 },
                 "layers_config": [
                     {
@@ -302,324 +306,10 @@
             "train": {
                 "class": "pyfasta_data_loader.TwoStreamSeqOnly",
                 "kwargs": {
+                   "random_seed": 4234,
                    "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
-                   "negatives_to_positives_ratio": 10,
-                   "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
-                   "rc_augment": true,
-                   "num_to_load_for_eval": 50000,
-                   "labels_dtype": "int"
-                }
-            }
-        },
-    },
-    {
-        "message": "dan-model-preinit seed-5234",
-        "model_trainer":{
-            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
-            "kwargs": {
-                "seed": 5234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping" ,
-                    "kwargs": {
-                       "max_epochs": 300,
-                       "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {"0":1, "1":10}
-            }
-        },
-        "model_creator":{
-            "class": "flexible_keras.FlexibleKerasSequential",
-            "kwargs": {
-                "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
-                },
-                "layers_config": [
-                    {
-                        "class": "keras.layers.core.Dense",
-                        "kwargs": {"output_dim": 1, "name":"dense_3"}
-                    },
-                    {
-
-                        "class": "keras.layers.core.Activation",
-                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
-                     }
-                ],
-                "optimizer_config": {
-                    "class": "keras.optimizers.Adam",
-                    "kwargs": {"lr": 0.0001}
-                },
-                "loss": {
-                    "modules_to_load": ["keras_genomics"],
-                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
-                }
-            }
-        },
-        "other_data_loaders":{
-            "train": {
-                "class": "pyfasta_data_loader.TwoStreamSeqOnly",
-                "kwargs": {
-                   "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
-                   "negatives_to_positives_ratio": 10,
-                   "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
-                   "rc_augment": true,
-                   "num_to_load_for_eval": 50000,
-                   "labels_dtype": "int"
-                }
-            }
-        },
-    },
-    {
-        "message": "dan-model-preinit seed-6234",
-        "model_trainer":{
-            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
-            "kwargs": {
-                "seed": 6234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping" ,
-                    "kwargs": {
-                       "max_epochs": 300,
-                       "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {"0":1, "1":10}
-            }
-        },
-        "model_creator":{
-            "class": "flexible_keras.FlexibleKerasSequential",
-            "kwargs": {
-                "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
-                },
-                "layers_config": [
-                    {
-                        "class": "keras.layers.core.Dense",
-                        "kwargs": {"output_dim": 1, "name":"dense_3"}
-                    },
-                    {
-
-                        "class": "keras.layers.core.Activation",
-                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
-                     }
-                ],
-                "optimizer_config": {
-                    "class": "keras.optimizers.Adam",
-                    "kwargs": {"lr": 0.0001}
-                },
-                "loss": {
-                    "modules_to_load": ["keras_genomics"],
-                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
-                }
-            }
-        },
-        "other_data_loaders":{
-            "train": {
-                "class": "pyfasta_data_loader.TwoStreamSeqOnly",
-                "kwargs": {
-                   "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
-                   "negatives_to_positives_ratio": 10,
-                   "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
-                   "rc_augment": true,
-                   "num_to_load_for_eval": 50000,
-                   "labels_dtype": "int"
-                }
-            }
-        },
-    },
-    {
-        "message": "dan-model-preinit seed-7234",
-        "model_trainer":{
-            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
-            "kwargs": {
-                "seed": 7234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping" ,
-                    "kwargs": {
-                       "max_epochs": 300,
-                       "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {"0":1, "1":10}
-            }
-        },
-        "model_creator":{
-            "class": "flexible_keras.FlexibleKerasSequential",
-            "kwargs": {
-                "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
-                },
-                "layers_config": [
-                    {
-                        "class": "keras.layers.core.Dense",
-                        "kwargs": {"output_dim": 1, "name":"dense_3"}
-                    },
-                    {
-
-                        "class": "keras.layers.core.Activation",
-                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
-                     }
-                ],
-                "optimizer_config": {
-                    "class": "keras.optimizers.Adam",
-                    "kwargs": {"lr": 0.0001}
-                },
-                "loss": {
-                    "modules_to_load": ["keras_genomics"],
-                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
-                }
-            }
-        },
-        "other_data_loaders":{
-            "train": {
-                "class": "pyfasta_data_loader.TwoStreamSeqOnly",
-                "kwargs": {
-                   "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
-                   "negatives_to_positives_ratio": 10,
-                   "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
-                   "rc_augment": true,
-                   "num_to_load_for_eval": 50000,
-                   "labels_dtype": "int"
-                }
-            }
-        },
-    },
-    {
-        "message": "dan-model-preinit seed-8234",
-        "model_trainer":{
-            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
-            "kwargs": {
-                "seed": 8234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping" ,
-                    "kwargs": {
-                       "max_epochs": 300,
-                       "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {"0":1, "1":10}
-            }
-        },
-        "model_creator":{
-            "class": "flexible_keras.FlexibleKerasSequential",
-            "kwargs": {
-                "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
-                },
-                "layers_config": [
-                    {
-                        "class": "keras.layers.core.Dense",
-                        "kwargs": {"output_dim": 1, "name":"dense_3"}
-                    },
-                    {
-
-                        "class": "keras.layers.core.Activation",
-                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
-                     }
-                ],
-                "optimizer_config": {
-                    "class": "keras.optimizers.Adam",
-                    "kwargs": {"lr": 0.0001}
-                },
-                "loss": {
-                    "modules_to_load": ["keras_genomics"],
-                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
-                }
-            }
-        },
-        "other_data_loaders":{
-            "train": {
-                "class": "pyfasta_data_loader.TwoStreamSeqOnly",
-                "kwargs": {
-                   "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
-                   "negatives_to_positives_ratio": 10,
-                   "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
-                   "rc_augment": true,
-                   "num_to_load_for_eval": 50000,
-                   "labels_dtype": "int"
-                }
-            }
-        },
-    },
-    {
-        "message": "dan-model-preinit seed-9234",
-        "model_trainer":{
-            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
-            "kwargs": {
-                "seed": 9234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping" ,
-                    "kwargs": {
-                       "max_epochs": 300,
-                       "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {"0":1, "1":10}
-            }
-        },
-        "model_creator":{
-            "class": "flexible_keras.FlexibleKerasSequential",
-            "kwargs": {
-                "pretrained_model_config": {
-                    "weight_file": "dan_basset_keras_port.weights.h5",
-                    "json_file": "dan_basset_keras_port.arch.json",
-                    "last_layer_to_take": -3,
-                    #"last_layer_to_fix": -3 
-                },
-                "layers_config": [
-                    {
-                        "class": "keras.layers.core.Dense",
-                        "kwargs": {"output_dim": 1, "name":"dense_3"}
-                    },
-                    {
-
-                        "class": "keras.layers.core.Activation",
-                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
-                     }
-                ],
-                "optimizer_config": {
-                    "class": "keras.optimizers.Adam",
-                    "kwargs": {"lr": 0.0001}
-                },
-                "loss": {
-                    "modules_to_load": ["keras_genomics"],
-                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
-                }
-            }
-        },
-        "other_data_loaders":{
-            "train": {
-                "class": "pyfasta_data_loader.TwoStreamSeqOnly",
-                "kwargs": {
-                   "batch_size": 200,
-                   "positives_bed_source": "naive_window_around_summit.bed.gz",
-                   "negatives_bed_source": "universal_negatives.bed.gz",
+                   "positives_bed_source": "train_positives.gz",
+                   "negatives_bed_source": "train_negatives.gz",
                    "negatives_to_positives_ratio": 10,
                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
                    "rc_augment": true,

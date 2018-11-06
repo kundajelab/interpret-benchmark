@@ -307,7 +307,11 @@ def compute_imp_scores(options):
         ####
         sorted_prediction_indices = [x[0] for x in sorted(enumerate(unseen_positives_preds),
                              key=lambda x: -x[1])]
-        subset_indices = sorted_prediction_indices[::10]
+        if (options.fixed_regions):
+            print("Scoring fixed region indices")
+            subset_indices = list(range(len(sorted_prediction_indices)))[::10]
+        else:
+            subset_indices = sorted_prediction_indices[::10]
         print("Num to score",len(subset_indices))
         positives_X_subset_preds = np.array([unseen_positives_preds[i] for i in subset_indices])
         positives_X_subset = np.array([positives_data.X[i] for i in subset_indices])
@@ -318,7 +322,7 @@ def compute_imp_scores(options):
         method_to_scores_shuffref = {}
         method_to_ism_score = {}
 
-        scores_file_name = "imp_scores_"+model_id+".h5"
+        scores_file_name = options.dir+"/imp_scores_"+model_id+".h5"
         print("Saving scores to",scores_file_name)
         #!rm $scores_file_name
         file_to_save_in = h5py.File(scores_file_name)
@@ -397,5 +401,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_ids", nargs="+", required=True)
+    parser.add_argument("--dir", required=True)
+    parser.add_argument("--fixed_regions", action="store_true")
     options = parser.parse_args()
     compute_imp_scores(options)

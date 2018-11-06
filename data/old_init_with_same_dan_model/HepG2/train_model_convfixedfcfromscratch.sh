@@ -1,0 +1,1 @@
+../train_model_convfixedfcfromscratch.sh
