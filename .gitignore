@@ -8,6 +8,7 @@
 **/*.json
 **/model_files
 **/*.npz
+**/.nfs*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
