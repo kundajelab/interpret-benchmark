@@ -326,7 +326,7 @@ def compute_imp_scores(options):
         #  x[0] for x in sorted(enumerate(data_preds),
         #  key=lambda x: -x[1])]
         #subset_indices = sorted_prediction_indices[::10]
-        subset_indices = list(range(len(data_preds)))[::10]
+        subset_indices = list(range(len(data_preds)))[::options.subsample_rate]
         print("Num to score",len(subset_indices))
         subset_preds =\
             np.array([data_preds[i] for i in subset_indices])
@@ -418,6 +418,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_ids", nargs="+", required=True)
+    parser.add_argument("--subsample_rate", type=int, default=10)
     parser.add_argument("--dir", required=True)
     options = parser.parse_args()
     compute_imp_scores(options)

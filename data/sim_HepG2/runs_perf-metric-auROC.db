@@ -1,15 +1,145 @@
 {
     "metadata": {
-        "total_records": 9,
-        "best_valid_key_metric": 0.8245963698141078,
+        "total_records": 10,
+        "best_valid_key_metric": 0.8275849766527935,
         "best_saved_files_config": {
-            "weights_file": "model_files/record_3_model_iNu96_modelWeights.h5",
-            "json_file": "model_files/record_3_model_iNu96_modelJson.json",
+            "weights_file": "model_files/record_10_model_xpYJA_modelWeights.h5",
+            "json_file": "model_files/record_10_model_xpYJA_modelJson.json",
             "directory": "model_files",
-            "prefix": "model_iNu96"
+            "prefix": "model_xpYJA"
         }
     },
     "records": [
+        {
+            "record_number": 10,
+            "message": "sim dan-model-preinit-randinporder seed-9234",
+            "best_valid_key_metric": 0.8275849766527935,
+            "best_valid_perf_info": {
+                "epoch": 2,
+                "valid_key_metric": 0.8275849766527935,
+                "train_key_metric": 0.8065025556946263,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8275849766527935
+                    ],
+                    "mean_auROC": 0.8275849766527935,
+                    "per_output_auPRC": [
+                        0.7103240552328658
+                    ],
+                    "mean_auPRC": 0.7103240552328658,
+                    "per_output_balanced_accuracy": [
+                        0.7321054851434414
+                    ],
+                    "mean_balanced_accuracy": 0.7321054851434414,
+                    "per_output_unbalanced_accuracy": [
+                        0.8071487272100079
+                    ],
+                    "mean_unbalanced_accuracy": 0.8071487272100079
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8063104693903929,
+                    0.8119975746596562
+                ],
+                [
+                    0.8065025556946263,
+                    0.8275849766527935
+                ],
+                [
+                    0.806603961913623,
+                    0.8263500258088966
+                ],
+                [
+                    0.793531174784097,
+                    0.8216022986621917
+                ],
+                [
+                    0.8036505571370859,
+                    0.8200043369650087
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_10_model_xpYJA_modelWeights.h5",
+                "json_file": "model_files/record_10_model_xpYJA_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_xpYJA"
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_9.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output_act"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                    "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                    "fasta_col": 4,
+                    "randomize_after_pass": true,
+                    "random_seed": 9234
+                }
+            },
+            "model_trainer_info": {
+                "seed": 9234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 5
+            }
+        },
         {
             "record_number": 3,
             "message": "sim dan-model-preinit-randinporder seed-2234",
@@ -451,38 +581,39 @@
                     "mean_unbalanced_accuracy": 0.805748607489626
                 }
             },
-            "key_metric_history": [
-                [
-                    "train",
-                    "valid"
-                ],
-                [
-                    0.80097284528611,
-                    0.8097825609595813
-                ],
-                [
-                    0.8074929791067108,
-                    0.819820418827348
-                ],
-                [
-                    0.8085862311913954,
-                    0.8140947190797971
-                ],
-                [
-                    0.8027898743243738,
-                    0.8148507119825554
-                ],
-                [
-                    0.8068138185894043,
-                    0.8047420292506393
-                ]
-            ],
-            "all_valid_metrics_history": {},
-            "saved_files_config": {
-                "weights_file": "model_files/record_9_model_8fTYg_modelWeights.h5",
-                "json_file": "model_files/record_9_model_8fTYg_modelJson.json",
-                "directory": "model_files",
-                "prefix": "model_8fTYg"
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 5
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                    "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                    "fasta_col": 4,
+                    "randomize_after_pass": true,
+                    "random_seed": 8234
+                }
+            },
+            "model_trainer_info": {
+                "seed": 8234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
             },
             "model_creator_info": {
                 "pretrained_model_config": {
@@ -519,39 +650,38 @@
                     "func": "keras_genomics.losses.ambig_binary_crossentropy"
                 }
             },
-            "other_data_loaders_info": {
-                "train": {
-                    "batch_size": 200,
-                    "rc_augment": true,
-                    "num_to_load_for_eval": 50000,
-                    "wrap_in_keys": null,
-                    "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
-                    "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
-                    "fasta_col": 4,
-                    "randomize_after_pass": true,
-                    "random_seed": 8234
-                }
-            },
-            "model_trainer_info": {
-                "seed": 8234,
-                "samples_per_epoch": 2000,
-                "stopping_criterion_config": {
-                    "class": "EarlyStopping",
-                    "kwargs": {
-                        "max_epochs": 300,
-                        "epochs_to_wait": 3
-                    }
-                },
-                "class_weight": {
-                    "0": 1,
-                    "1": 10
-                },
-                "report_all_valid_metrics_every_epoch": false,
-                "reparameterizer": null
-            },
-            "training_metadata": {
-                "termination_condition": "normal",
-                "total_epochs_trained_for": 5
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.80097284528611,
+                    0.8097825609595813
+                ],
+                [
+                    0.8074929791067108,
+                    0.819820418827348
+                ],
+                [
+                    0.8085862311913954,
+                    0.8140947190797971
+                ],
+                [
+                    0.8027898743243738,
+                    0.8148507119825554
+                ],
+                [
+                    0.8068138185894043,
+                    0.8047420292506393
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_9_model_8fTYg_modelWeights.h5",
+                "json_file": "model_files/record_9_model_8fTYg_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_8fTYg"
             }
         },
         {
