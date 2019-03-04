@@ -8,8 +8,9 @@ cp /oak/stanford/groups/akundaje/projects/atlas/processed_dnase/k562_dnase/cromw
 
 #Map the representative DNase negatives to hg38 using liftover
 module load ucsc_tools
-#download the liftover chain file
+#download the liftover chain file if it doesn't exist already
 [[ -e hg19ToHg38.over.chain.gz ]] || wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
+#run the liftover command
 liftOver merged_universal_neg_representative_peaks.bed.gz hg19ToHg38.over.chain.gz hg38_merged_universal_neg_representative_peaks.bed unmapped_merged_universal_neg_representative_peaks.bed
 #compress and clean up
 gzip hg38_merged_universal_neg_representative_peaks.bed
