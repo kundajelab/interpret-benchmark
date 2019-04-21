@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#Foreground: IDR optimal ENCODE peaks in SPI1 hg38
+#Foreground: IDR optimal ENCODE peaks in K562 SPI1 hg38
 #Background: Accessible sites in K562 that do NOT overlap top 100K "relaxed" ENCODE SPI1 peaks
 
 #Download the ENCODE idr optimal peaks and relaxed peaks
