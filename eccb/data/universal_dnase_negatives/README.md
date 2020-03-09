@@ -1,4 +1,5 @@
-This contains code for generating a file with regions that are "representative"
+This contains code for generating `merged_universal_neg_representative_peaks.bed.gz`,
+which is a file with regions that are "representative"
 of dnase peaks present across multiple cell types.
 
 The starting input file was
