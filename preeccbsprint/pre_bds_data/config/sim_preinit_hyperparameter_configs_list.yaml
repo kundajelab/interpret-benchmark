@@ -1,0 +1,632 @@
+[
+    {
+        "message": "sim dan-model-preinit-randinporder seed-234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_0.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-1234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 1234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_1.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 1234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-2234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 2234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_2.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 2234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-3234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 3234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_3.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 3234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-4234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 4234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_4.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 4234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-5234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 5234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_5.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 5234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-6234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 6234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_6.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 6234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-7234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 7234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_7.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 7234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-8234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 8234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_8.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 8234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+    {
+        "message": "sim dan-model-preinit-randinporder seed-9234",
+        "model_trainer":{
+            "class": "keras_model_trainer.KerasFitGeneratorModelTrainer",
+            "kwargs": {
+                "seed": 9234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping" ,
+                    "kwargs": {
+                       "max_epochs": 300,
+                       "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {"0":1, "1":10}
+            }
+        },
+        "model_creator":{
+            "class": "flexible_keras.FlexibleKerasSequential",
+            "kwargs": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port/dan_basset_keras_port_9.weights.h5",
+                    "json_file": "dan_basset_keras_port/dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -2,
+                    #"last_layer_to_fix": -2
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {"output_dim": 1, "name":"dense_3"}
+                    },
+                    {
+
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {"activation": "sigmoid", "name": "output_act"}
+                     }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {"lr": 0.0001}
+                },
+                "loss": {
+                    "modules_to_load": ["keras_genomics"],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            }
+        },
+        "other_data_loaders":{
+            "train": {
+                "class": "fasta_inmemory_data_loader.TwoStreamSeqOnly",
+                "kwargs": {
+                   "random_seed": 9234,
+                   "batch_size": 200,
+                   "positives_fasta_source": "train_dinucshuff_motifs_inserted_sigthresh5e-6_sorted_naive_window_around_summit.bed.gz",
+                   "negatives_fasta_source": "train_nonoverlap_dinucshuff_motifs_inserted_sigthresh5e-6_merged_universal_neg_representative_peaks.bed.gz",
+                   "fasta_col": 4,
+                   "negatives_to_positives_ratio": 10,
+                   "rc_augment": true,
+                   "num_to_load_for_eval": 50000,
+                }
+            }
+        },
+    },
+]

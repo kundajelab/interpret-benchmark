@@ -1,5 +1,0 @@
-K562 /mnt/data/integrative/dnase/ENCSR000EPC.K562_Leukemia_Cells.UW_Stam.DNase-seq/out_50m/peak
-GM12878 /mnt/data/integrative/dnase/ENCSR000EMT.GM12878_Lymphoblastoid_Cells.UW_Stam.DNase-seq/out_full/peak
-HepG2 /mnt/data/integrative/dnase/ENCSR000ENP.HepG2_Hepatocellular_Carcinoma_Cell_Line.UW_Stam.DNase-seq/out_50m/peak
-A549 /mnt/data/integrative/dnase/ENCSR000ELW.A549_EtOH_pt02pct_Lung_Carcinoma_Cell_Line.UW_Stam.DNase-seq/out_50m/peak
-MCF-7 /mnt/data/integrative/dnase/ENCSR000EPJ.MCF-7_Mammary_Gland_Adenocarcinoma_Cell_Line.UW_Stam.DNase-seq/out_50m/peak

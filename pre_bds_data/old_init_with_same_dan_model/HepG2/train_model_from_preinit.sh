@@ -1,1 +1,0 @@
-../train_model_from_preinit.sh

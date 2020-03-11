@@ -1,0 +1,8 @@
+[
+    {"class":"WriteToDbCallback",
+     "kwargs":{"db_path": "runs.db"}},
+    {"class":"EmailCallback",
+     "kwargs":{"to_emails":["avanti.shrikumar@gmail.com"],
+               "from_email": "interpret-benchmark@stanford.edu",
+               "smtp_server": "smtp.stanford.edu"}},
+]

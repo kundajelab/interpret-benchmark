@@ -1,0 +1,209 @@
+{
+    "metadata": {
+        "total_records": 1,
+        "best_valid_key_metric": 0.8841008293605723,
+        "best_saved_files_config": {
+            "weights_file": "model_files/record_1_model_HihkK_modelWeights.h5",
+            "json_file": "model_files/record_1_model_HihkK_modelJson.json",
+            "directory": "model_files",
+            "prefix": "model_HihkK"
+        }
+    },
+    "records": [
+        {
+            "record_number": 1,
+            "message": "dan model preinit",
+            "best_valid_key_metric": 0.8841008293605723,
+            "best_valid_perf_info": {
+                "epoch": 18,
+                "valid_key_metric": 0.8841008293605723,
+                "train_key_metric": 0.8919046742595227,
+                "valid_all_stats": {
+                    "per_output_auROC": [
+                        0.8841008293605723
+                    ],
+                    "mean_auROC": 0.8841008293605723,
+                    "per_output_auPRC": [
+                        0.0395329008644098
+                    ],
+                    "mean_auPRC": 0.0395329008644098,
+                    "per_output_balanced_accuracy": [
+                        0.828298056296761
+                    ],
+                    "mean_balanced_accuracy": 0.828298056296761,
+                    "per_output_unbalanced_accuracy": [
+                        0.8104871014260535
+                    ],
+                    "mean_unbalanced_accuracy": 0.8104871014260535
+                }
+            },
+            "key_metric_history": [
+                [
+                    "train",
+                    "valid"
+                ],
+                [
+                    0.8739677249642174,
+                    0.8602294390826577
+                ],
+                [
+                    0.8686329709104239,
+                    0.866335080603216
+                ],
+                [
+                    0.8754462772427003,
+                    0.8686495821813357
+                ],
+                [
+                    0.8801482443670958,
+                    0.871191518947233
+                ],
+                [
+                    0.8835048031135105,
+                    0.8739528579690589
+                ],
+                [
+                    0.8804546813822653,
+                    0.8736785266148982
+                ],
+                [
+                    0.8801686852094402,
+                    0.8754816131575175
+                ],
+                [
+                    0.8839088970519472,
+                    0.8751026143468403
+                ],
+                [
+                    0.8851192987303089,
+                    0.8769324324522428
+                ],
+                [
+                    0.8896171743062237,
+                    0.8773044454544032
+                ],
+                [
+                    0.881917996713894,
+                    0.8764030966488553
+                ],
+                [
+                    0.8827101270573805,
+                    0.8776524194966346
+                ],
+                [
+                    0.888027807361925,
+                    0.878890792426139
+                ],
+                [
+                    0.8844473276222209,
+                    0.8799673399240872
+                ],
+                [
+                    0.8911492092376284,
+                    0.881310455104632
+                ],
+                [
+                    0.8884066516409285,
+                    0.8824847889629132
+                ],
+                [
+                    0.8877501692800781,
+                    0.8823261198602587
+                ],
+                [
+                    0.8919046742595227,
+                    0.8841008293605723
+                ],
+                [
+                    0.8871104097331877,
+                    0.8836061234216748
+                ],
+                [
+                    0.8932946568434053,
+                    0.8835271852813232
+                ],
+                [
+                    0.885939972458728,
+                    0.8827664352214952
+                ]
+            ],
+            "all_valid_metrics_history": {},
+            "saved_files_config": {
+                "weights_file": "model_files/record_1_model_HihkK_modelWeights.h5",
+                "json_file": "model_files/record_1_model_HihkK_modelJson.json",
+                "directory": "model_files",
+                "prefix": "model_HihkK"
+            },
+            "model_creator_info": {
+                "pretrained_model_config": {
+                    "weight_file": "dan_basset_keras_port.weights.h5",
+                    "json_file": "dan_basset_keras_port.arch.json",
+                    "last_layer_to_take": -3
+                },
+                "layers_config": [
+                    {
+                        "class": "keras.layers.core.Dense",
+                        "kwargs": {
+                            "output_dim": 1,
+                            "name": "dense_3"
+                        }
+                    },
+                    {
+                        "class": "keras.layers.core.Activation",
+                        "kwargs": {
+                            "activation": "sigmoid",
+                            "name": "output_act"
+                        }
+                    }
+                ],
+                "optimizer_config": {
+                    "class": "keras.optimizers.Adam",
+                    "kwargs": {
+                        "lr": 0.0001
+                    }
+                },
+                "loss": {
+                    "modules_to_load": [
+                        "keras_genomics"
+                    ],
+                    "func": "keras_genomics.losses.ambig_binary_crossentropy"
+                }
+            },
+            "other_data_loaders_info": {
+                "train": {
+                    "batch_size": 200,
+                    "rc_augment": true,
+                    "num_to_load_for_eval": 50000,
+                    "wrap_in_keys": null,
+                    "positives_bed_source": "naive_window_around_summit.bed.gz",
+                    "negatives_bed_source": "universal_negatives.bed.gz",
+                    "fasta_data_source": "/mnt/data/annotations/by_organism/human/hg19.GRCh37/hg19.genome.fa",
+                    "labels_dtype": "int",
+                    "randomize_after_pass": true,
+                    "random_seed": 1
+                }
+            },
+            "model_trainer_info": {
+                "seed": 1234,
+                "samples_per_epoch": 2000,
+                "stopping_criterion_config": {
+                    "class": "EarlyStopping",
+                    "kwargs": {
+                        "max_epochs": 300,
+                        "epochs_to_wait": 3
+                    }
+                },
+                "class_weight": {
+                    "0": 1,
+                    "1": 10
+                },
+                "report_all_valid_metrics_every_epoch": false,
+                "reparameterizer": null
+            },
+            "training_metadata": {
+                "termination_condition": "normal",
+                "total_epochs_trained_for": 21
+            }
+        }
+    ]
+}
