@@ -3,6 +3,7 @@
 **/*.gz
 **/*.txt
 **/*.fa
+**/*.fasta
 **/*.narrowPeak
 **/*.h5
 **/*.json
