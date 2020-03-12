@@ -3,6 +3,8 @@ import os
 import re
 import shutil
 import gzip
+from collections import OrderedDict
+import numpy as np
 
 
 def create_dir(working_dir, mustcreate=True):
@@ -16,29 +18,43 @@ def create_dir(working_dir, mustcreate=True):
 
 
 def copy_file_to_working_dir(f, working_dir):
-	os.system('cp ' + f + ' ' + working_dir)
+    os.system('cp ' + f + ' ' + working_dir)
 
 
 def get_file_name_from_path(path):
     #remember, regex matches are 'greedy' in that they match as much
     # text as possible
-	match=re.match('(.*/)*(.*)', path)
-	return match.group(2)
+    match=re.match('(.*/)*(.*)', path)
+    return match.group(2)
 
 
 def open_fh(path):
     return (gzip.open(path) if '.gz' in path else open(path))
 
 
+def parse_chromsizes_file(chromsizes_file):
+    to_return = {}
+    for line in open(chromsizes_file):
+        chrom, size = line.rstrip().split("\t") 
+        to_return[chrom] = int(size)
+    return to_return
+
+
 #Will write out regions of size region_size centered around the summits
 # in a narrowpeak file
 def expand_region_around_narrowpeak_summit(narrowpeak_file,
-                                           region_size, output_file):
+                                           region_size,
+                                           output_file,
+                                           chromsizes_file):
+    #read in the region lengths from a chromsizes file
+    chromsizes = parse_chromsizes_file(chromsizes_file=chromsizes_file)
     assert region_size%2==0, (
             "please supply an even region_size; is "+str(region_size))
     input_fh = open_fh(path=narrowpeak_file) 
     output_fh = open(output_file, 'w')
     for line in input_fh:
+        if (hasattr(line, 'decode')):
+            line = line.decode('utf-8')
         #The narrowpeak format is such that the first 3 columns are the
         # same as a bed file - chrom, start, end - but column idx 9 is the
         # offset of the summit from the start
@@ -51,8 +67,13 @@ def expand_region_around_narrowpeak_summit(narrowpeak_file,
         summit_offset = int(entries[9])
         out_region_start = start+summit_offset-int(region_size/2)
         out_region_end = out_region_start + region_size 
-        output_fh.write(chrom+"\t"+str(out_region_start)
-                             +"\t"+str(out_region_end)+"\n")
+        if (out_region_start > 0) and (out_region_end < chromsizes[chrom]):
+            output_fh.write(chrom+"\t"+str(out_region_start)
+                                 +"\t"+str(out_region_end)+"\n")
+        else:
+            print("skipping "+chrom+"\t"+str(out_region_start)
+                  +"\t"+str(out_region_end)
+                  +" because it's outside the chromosome\n")
     input_fh.close()
     output_fh.close() 
 
@@ -77,9 +98,9 @@ def resize_regions(input_bed, region_size, output_bed):
 
 
 def get_fasta(genome_fasta, bed_file, output_fasta):
-	cmd = ('bedtools getfasta -fi ' + genome_fasta
+    cmd = ('bedtools getfasta -fi ' + genome_fasta
            + ' -bed '+ bed_file + ' > ' + output_fasta)
-	os.system(cmd)
+    os.system(cmd)
 
 
 def calculate_gc_frac(seq):
@@ -143,9 +164,9 @@ def sample_matched(set_to_match, set_to_sample_from, attrfunc, display=False):
     return matched_sampled_items
 
 
-def load_fasta(fasta_file, verbose=True):
+def load_fasta(fasta_file, skip_nonstandard=False, verbose=True):
     seqs = OrderedDict()
-    fp = open(seqfile, "rb")
+    fp = open(fasta_file)
     print("#Loading " + fasta_file + " ...")
     expecting = "label"
     label=''
@@ -162,7 +183,13 @@ def load_fasta(fasta_file, verbose=True):
             match = re.match("(\w+)$", line)
             if match:
                 sequence = match.group(1)
-                seqs[label] = sequence
+                nonstandard_chars = (set(sequence.upper())
+                                     - set(('A','C','G','T')))
+                if (len(nonstandard_chars)==0):
+                    seqs[label] = sequence
+                else:
+                    print("Skipping",label,
+                          "due to nonstandard chars",nonstandard_chars)
             else:
                 raise RuntimeError("Expecting SEQUENCE but found (!!): "+line)
             expecting = "label"
@@ -170,32 +197,43 @@ def load_fasta(fasta_file, verbose=True):
     fp.close()
     if (verbose):
         print("#Loaded " + str(len(seqs.keys()))
-                         + " sequences from " + seqfile)
+                         + " sequences from " + fasta_file)
     return seqs
+
+
+def write_fasta(key_and_seq_pairs, output_fasta):
+    fp = open(output_fasta, "w")
+    for idx,(key,seq) in enumerate(key_and_seq_pairs):
+        fp.write('>'+key+'\n')
+        fp.write(seq)
+        if idx < len(key_and_seq_pairs)-1:
+            fp.write('\n')
+    fp.close()
     
 
-def match_gc_content(to_match_fasta, bg_fasta,
-                     output_fasta, display=False):
+def match_gc_content_and_skip_nonstandard(
+     to_match_fasta, bg_fasta,
+     output_tomatch_fasta, output_bg_fasta, display=False):
 
-	to_match_seqs_dict = load_fasta(fasta_file=to_match_fasta)
-	bg_seqs_dict = load_fasta(fasta_file=bg_fasta)
-	
-	gcsorted_matched_bg = sample_matched(
-        set_to_match=list(to_match_seqs_dict.items()),
-        set_to_sample_from=list(bg_seqs_dict.items()),
-        attrfunc=lambda x: gc_content(x[1]),
+    tomatch_keyandseqpairs = list(load_fasta(fasta_file=to_match_fasta,
+                                             skip_nonstandard=True).items())
+    bg_keyandseqpairs = list(load_fasta(fasta_file=bg_fasta,
+                                        skip_nonstandard=True).items())
+
+    gcsorted_matched_bg = sample_matched(
+        set_to_match=tomatch_keyandseqpairs,
+        set_to_sample_from=bg_keyandseqpairs,
+        attrfunc=lambda x: calculate_gc_frac(x[1]),
         display=display)
 
-    #sort the matched bg by the key, because otherwise they
+    #sort by the key, because otherwise the bg
     # would end up sorted by gc content, which could create weird artifacts
     # if the data are sequentially split for model training
     seqnamesorted_matched_bg = sorted(gcsorted_matched_bg, key=lambda x: x[0]) 
+    seqnamesorted_tomatch = sorted(tomatch_keyandseqpairs, key=lambda x: x[0])
 
     #write out to file
-	fp = open(output_fasta, "w")
-	for idx,(seq_key,seq) in enumerate(seqnamesorted_matched_bg):
-		fp.write('>'+seq_key+'\n')
-        fp.write(seq)
-		if idx < len(seqnamesorted_matched_bg)-1:
-        	fp.write('\n')
-	fp.close()
+    write_fasta(key_and_seq_pairs=seqnamesorted_matched_bg,
+                output_fasta=output_bg_fasta)
+    write_fasta(key_and_seq_pairs=seqnamesorted_tomatch,
+                output_fasta=output_tomatch_fasta)

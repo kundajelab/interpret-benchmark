@@ -7,63 +7,70 @@ import configparser
 import argparse
 import os
 from vakai import util
-import simgen
 
 
 def generate_pos_and_neg_fasta(cfg):
     POS_NARROWPEAK = cfg['DEFAULT']['POS_NARROWPEAK']
-    NEG_BED = cfg['DEFAULT']['NEG_BED']
+    BG_NARROWPEAK = cfg['DEFAULT']['BG_NARROWPEAK']
     TARGET_MASTER_DIR = cfg['DEFAULT']['TARGET_MASTER_DIR'] 
     TARGET_SEQUENCES_DIR = TARGET_MASTER_DIR + "/sequences"
     REGION_SIZE = int(cfg['DEFAULT']['REGION_SIZE'])
     GENOME_FASTA = cfg['DEFAULT']['GENOME_FASTA']
+    CHROMSIZES = cfg['DEFAULT']['CHROMSIZES']
 
     util.create_dir(TARGET_MASTER_DIR, mustcreate=False)
     util.create_dir(TARGET_SEQUENCES_DIR, mustcreate=False)
 
-    #Go from narrowpeak to fixed-size regions around the summit
-    pos_bed = TARGET_SEQUENCES_DIR + '/positives.bed'
+    #Go from narrowpeak to fixed-size regions around the summit for pos & bg
+    pos_bed = TARGET_SEQUENCES_DIR + '/prefilt_positives.bed'
     util.expand_region_around_narrowpeak_summit(
             narrowpeak_file=POS_NARROWPEAK,
             region_size=REGION_SIZE,
-            output_file=pos_bed)
+            output_file=pos_bed,
+            chromsizes_file=CHROMSIZES)
     #gzip the positives bed file, update its name
-    os.system("gzip "+pos_bed)
+    os.system("gzip -f "+pos_bed)
     pos_bed = pos_bed+".gz"
 
-    #center the regions in the negative set to have the same size as
-    # REGION_SIZE
-    regionsize_neg_bed = TARGET_SEQUENCES_DIR+'/background.bed' 
-    util.resize_regions(input_bed=pos_bed,
-                        region_size=REGION_SIZE,
-                        output_bed=regionsize_neg_bed)
-    #gzip the negatives bed file, update its name
-    os.system("gzip "+regionsize_neg_bed)
-    regionsize_neg_bed = regionsize_neg_bed+".gz"
+    #Do the same for the background set
+    bg_bed = TARGET_SEQUENCES_DIR + '/bg.bed'
+    util.expand_region_around_narrowpeak_summit(
+            narrowpeak_file=BG_NARROWPEAK,
+            region_size=REGION_SIZE,
+            output_file=bg_bed,
+            chromsizes_file=CHROMSIZES)
+    #gzip the bg bed file, update its name
+    os.system("gzip -f "+bg_bed)
+    bg_bed = bg_bed+".gz"
 
-    #kick out regions in the negative set that overlap the positive set
-    bgminuspos_bed = (
-     TARGET_SEQUENCES_DIR + '/background_minus_positives.bed.gz')
-    os.system('intersectBed -v -a ' + regionsize_neg_bed
+    #kick out regions in the bg set that overlap the positive set
+    bgminuspos_bed = TARGET_SEQUENCES_DIR + '/bg_minus_prefiltpositives.bed.gz'
+    os.system('intersectBed -v -a ' + bg_bed
                + ' -b '+ pos_bed
                + ' -wa | gzip -c > ' + bgminuspos_bed)
 
     #get the fasta sequences associated with the positive and negative sets
-    pos_fasta = TARGET_SEQUENCES_DIR + '/positives.fa'
+    #note that the positives will be subsequently filtered to kick out
+    # entries with nonstandard bases
+    prefilt_pos_fasta = TARGET_SEQUENCES_DIR + '/prefilt_positives.fa'
     util.get_fasta(genome_fasta=GENOME_FASTA,
                    bed_file=pos_bed,
-                   output_fasta=pos_fasta)
-    bgminuspos_fasta = TARGET_SEQUENCES_DIR + '/background_minus_positives.fa'
+                   output_fasta=prefilt_pos_fasta)
+    bgminuspos_fasta = TARGET_SEQUENCES_DIR + '/bg_minus_prefiltpositives.fa'
     util.get_fasta(genome_fasta=GENOME_FASTA,
                    bed_file=bgminuspos_bed,
                    output_fasta=bgminuspos_fasta)
 
-    #do gc matching of the background, write out the resulting file as the
-    # negatives
+    #do gc matching of the bg, write resulting file as the negatives
+    #will also skip sequences that have nonstandard bases
+    final_positives_fasta = TARGET_SEQUENCES_DIR + '/' + 'positives.fa'
     final_negatives_fasta = TARGET_SEQUENCES_DIR + '/' + 'negatives.fa'
-    util.match_gc_content(to_match_fasta=pos_fasta,
-                          bg_fasta=bgminuspos_fasta,
-                          output_fasta=final_negatives_fasta, display=False)
+    util.match_gc_content_and_skip_nonstandard(
+            to_match_fasta=prefilt_pos_fasta,
+            bg_fasta=bgminuspos_fasta,
+            output_tomatch_fasta=final_positives_fasta,
+            output_bg_fasta=final_negatives_fasta,
+            display=False)
 
 
 if __name__=='__main__':
@@ -72,3 +79,4 @@ if __name__=='__main__':
     args = parser.parse_args()
     cfg = configparser.ConfigParser() 
     cfg.read(args.configfile)
+    generate_pos_and_neg_fasta(cfg)
