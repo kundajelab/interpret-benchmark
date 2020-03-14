@@ -5,17 +5,17 @@
 6-TTAATNATTAAC
 7-WAGCCCCGCCCH; Sp1, is expressed in HepG2
 8-NNNNTTCCGV; Elk1 (Diseases associated with ELK1 include Hepatocellular Carcinoma)
-#11-GCGCGCTA; top hit was DPL-1(E2F)/cElegans-Adult-ChIP-Seq(modEncode)/Homer, followed by 2 yeast motifs. None of the human motifs seemed like great fits.  Probably a GC artifact.
-#12-AAACAAAGCG; top hit is pan/MA0237.2/Jaspar. Looks like a degenerate motif, matches to a bunch of non-human stuff.
-#11-ACTACAATTCCC; dropping because it's present in <1% of positives
+11-GCGCGCTA; top hit was DPL-1(E2F)/cElegans-Adult-ChIP-Seq(modEncode)/Homer. But E2F is probably real.
+#12-AAACAAAGCG; all < 0.7 match to a known motif. Top hit is pan/MA0237.2/Jaspar. Looks like a degenerate motif, matches to a bunch of non-human stuff.
+11-ACTACAATTCCC; GFY(?) - is in the HOMER database
 14-TRCGCATGCG; NRF1, which is chipped in HepG2
 12-GGCCGCCATCTT; YY1, which is chipped in HepG2
 16-BRTTGCGCAA; CEBPE, which is chipped in HepG2
 17-CGGCCAATCG; NFY (NFY transcription factor binds to regulatory element AIC and transactivates the human apolipoprotein A-I promoter in HEPG2 cells)
 18-TCTCGCGA; ZBTB33 (which is chipped in HepG2) 
 22-GATGACTCAY; FOSL2 (which is chipped in HepG2)
-19-GTCACGTGACGC; E-box motif, so I'm keeping it
-#20-RTTCGAACCCGC; very degenerate, top hits are yeast, and present in only 0.06% of positives...
-#21-NMGTKACGTMNN; very degenerate, present in only 0.59% of motifs
-#23-CGTCGCCCGAAA; quite degenerate, top hit was Mad/dmmpmm(Pollard)/fly(0.670)
+19-GTCACGTGACGC; E-box motif, so I'll keep it
+#20-RTTCGAACCCGC; top hits are yeast, and present in only 0.06% of positives...
+21-NMGTKACGTMNN; Atf-1, which is chipped in HepG2
+#23-CGTCGCCCGAAA; suspicious-looking, present in 0.04% pos, top hit was Mad/dmmpmm(Pollard)/fly(0.670)
 #25-ATGTRCCGTATA; present in only 0.04% of positives, top hit was Cf2-II/dmmpmm(Pollard)/fly(0.584)

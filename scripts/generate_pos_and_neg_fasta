@@ -17,60 +17,68 @@ def generate_pos_and_neg_fasta(cfg):
     REGION_SIZE = int(cfg['DEFAULT']['REGION_SIZE'])
     GENOME_FASTA = cfg['DEFAULT']['GENOME_FASTA']
     CHROMSIZES = cfg['DEFAULT']['CHROMSIZES']
+    PIPELINE_TYPE = cfg['DEFAULT']['PIPELINE_TYPE']
+    assert PIPELINE_TYPE=="chip" or PIPELINE_TYPE=="dnase"
+    if (PIPELINE_TYPE=="chip"):
+        PEAKS_AND_BG_NARROWPEAK=cfg['DEFAULT']['PEAKS_AND_BG_NARROWPEAK']
 
     util.create_dir(TARGET_MASTER_DIR, mustcreate=False)
     util.create_dir(TARGET_SEQUENCES_DIR, mustcreate=False)
 
     #Go from narrowpeak to fixed-size regions around the summit for pos & bg
-    pos_bed = TARGET_SEQUENCES_DIR + '/prefilt_positives.bed'
-    util.expand_region_around_narrowpeak_summit(
-            narrowpeak_file=POS_NARROWPEAK,
-            region_size=REGION_SIZE,
-            output_file=pos_bed,
-            chromsizes_file=CHROMSIZES)
-    #gzip the positives bed file, update its name
-    os.system("gzip -f "+pos_bed)
-    pos_bed = pos_bed+".gz"
 
-    #Do the same for the background set
-    bg_bed = TARGET_SEQUENCES_DIR + '/bg.bed'
+    pos_bed = TARGET_SEQUENCES_DIR+'/prefilt_positives.bed.gz'
     util.expand_region_around_narrowpeak_summit(
-            narrowpeak_file=BG_NARROWPEAK,
-            region_size=REGION_SIZE,
-            output_file=bg_bed,
-            chromsizes_file=CHROMSIZES)
-    #gzip the bg bed file, update its name
-    os.system("gzip -f "+bg_bed)
-    bg_bed = bg_bed+".gz"
+                narrowpeak_file=POS_NARROWPEAK,
+                region_size=REGION_SIZE,
+                output_file=pos_bed,
+                chromsizes_file=CHROMSIZES)
+    if (PIPELINE_TYPE=="chip"):
+        peaks_and_bg_bed = TARGET_SEQUENCES_DIR+"/peaks_and_bg.bed.gz"
+        util.expand_region_around_narrowpeak_summit(
+                narrowpeak_file=PEAKS_AND_BG_NARROWPEAK,
+                region_size=REGION_SIZE,
+                output_file=peaks_and_bg_bed,
+                chromsizes_file=CHROMSIZES)
+    bg_bed = TARGET_SEQUENCES_DIR + '/bg.bed.gz'
+    util.expand_region_around_narrowpeak_summit(
+                narrowpeak_file=BG_NARROWPEAK,
+                region_size=REGION_SIZE,
+                output_file=bg_bed,
+                chromsizes_file=CHROMSIZES)
 
     #kick out regions in the bg set that overlap the positive set
-    bgminuspos_bed = TARGET_SEQUENCES_DIR + '/bg_minus_prefiltpositives.bed.gz'
+    if (PIPELINE_TYPE=="chip"):
+        file_for_pos_exclusion_bed=peaks_and_bg_bed
+    elif (PIPELINE_TYPE=="dnase"):
+        file_for_pos_exclusion_bed=pos_bed
+    bgminuspos_bed = TARGET_SEQUENCES_DIR + '/bg_minus_pos.bed.gz'
     os.system('intersectBed -v -a ' + bg_bed
-               + ' -b '+ pos_bed
+               + ' -b '+ file_for_pos_exclusion_bed
                + ' -wa | gzip -c > ' + bgminuspos_bed)
 
     #get the fasta sequences associated with the positive and negative sets
     #note that the positives will be subsequently filtered to kick out
     # entries with nonstandard bases
-    prefilt_pos_fasta = TARGET_SEQUENCES_DIR + '/prefilt_positives.fa'
+    prefilt_pos_fasta = pos_bed+".fa"
     util.get_fasta(genome_fasta=GENOME_FASTA,
                    bed_file=pos_bed,
                    output_fasta=prefilt_pos_fasta)
-    bgminuspos_fasta = TARGET_SEQUENCES_DIR + '/bg_minus_prefiltpositives.fa'
+    bgminuspos_fasta = bgminuspos_bed+".fa"
     util.get_fasta(genome_fasta=GENOME_FASTA,
                    bed_file=bgminuspos_bed,
                    output_fasta=bgminuspos_fasta)
 
-    #do gc matching of the bg, write resulting file as the negatives
-    #will also skip sequences that have nonstandard bases
-    final_positives_fasta = TARGET_SEQUENCES_DIR + '/' + 'positives.fa'
-    final_negatives_fasta = TARGET_SEQUENCES_DIR + '/' + 'negatives.fa'
-    util.match_gc_content_and_skip_nonstandard(
-            to_match_fasta=prefilt_pos_fasta,
-            bg_fasta=bgminuspos_fasta,
-            output_tomatch_fasta=final_positives_fasta,
-            output_bg_fasta=final_negatives_fasta,
-            display=False)
+    positives_fasta = TARGET_SEQUENCES_DIR + '/positives.fa'
+    util.write_fasta(
+        key_and_seq_pairs=util.load_fasta(prefilt_pos_fasta,
+                                          skip_nonstandard=True),
+        output_fasta=positives_fasta) 
+    negatives_fasta = TARGET_SEQUENCES_DIR + '/negatives.fa'
+    util.write_fasta(
+        key_and_seq_pairs=util.load_fasta(bgminuspos_fasta,
+                                          skip_nonstandard=True),
+        output_fasta=negatives_fasta) 
 
 
 if __name__=='__main__':

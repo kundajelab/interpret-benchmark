@@ -42,10 +42,14 @@ def parse_chromsizes_file(chromsizes_file):
 
 #Will write out regions of size region_size centered around the summits
 # in a narrowpeak file
+#Will return the file name of the output, which is output_file+".gz"
 def expand_region_around_narrowpeak_summit(narrowpeak_file,
                                            region_size,
                                            output_file,
                                            chromsizes_file):
+    if (output_file.endswith(".gz")):
+        gzip = True
+        output_file = output_file[:-3] #will gzip later
     #read in the region lengths from a chromsizes file
     chromsizes = parse_chromsizes_file(chromsizes_file=chromsizes_file)
     assert region_size%2==0, (
@@ -75,7 +79,9 @@ def expand_region_around_narrowpeak_summit(narrowpeak_file,
                   +"\t"+str(out_region_end)
                   +" because it's outside the chromosome\n")
     input_fh.close()
-    output_fh.close() 
+    output_fh.close()
+    if (gzip):
+        os.system("gzip -f "+output_file)
 
 
 def resize_regions(input_bed, region_size, output_bed):
@@ -165,38 +171,30 @@ def sample_matched(set_to_match, set_to_sample_from, attrfunc, display=False):
 
 
 def load_fasta(fasta_file, skip_nonstandard=False, verbose=True):
-    seqs = OrderedDict()
+    seqs = []
     fp = open(fasta_file)
     print("#Loading " + fasta_file + " ...")
     expecting = "label"
     label=''
     for line in fp:
+        line = line.rstrip()
         if expecting == "label":
-            match = re.match(">(.*)$", line)
-            if match:
-                label = match.group(1)
-                expecting = "sequence"
-            else:
-                raise RuntimeError("Expecting LABEL but found (!!): "+line)
-                continue
+            label = line[1:]
+            expecting = "sequence"
         else:
-            match = re.match("(\w+)$", line)
-            if match:
-                sequence = match.group(1)
-                nonstandard_chars = (set(sequence.upper())
-                                     - set(('A','C','G','T')))
-                if (len(nonstandard_chars)==0):
-                    seqs[label] = sequence
-                else:
-                    print("Skipping",label,
-                          "due to nonstandard chars",nonstandard_chars)
+            sequence = line
+            nonstandard_chars = (set(sequence.upper())
+                                 - set(('A','C','G','T')))
+            if (len(nonstandard_chars)==0):
+                seqs.append((label,sequence))
             else:
-                raise RuntimeError("Expecting SEQUENCE but found (!!): "+line)
+                print("Skipping",label,
+                      "due to nonstandard chars",nonstandard_chars)
             expecting = "label"
             label=''
     fp.close()
     if (verbose):
-        print("#Loaded " + str(len(seqs.keys()))
+        print("#Loaded " + str(len(seqs))
                          + " sequences from " + fasta_file)
     return seqs
 
@@ -211,29 +209,14 @@ def write_fasta(key_and_seq_pairs, output_fasta):
     fp.close()
     
 
-def match_gc_content_and_skip_nonstandard(
-     to_match_fasta, bg_fasta,
-     output_tomatch_fasta, output_bg_fasta, display=False):
-
-    tomatch_keyandseqpairs = list(load_fasta(fasta_file=to_match_fasta,
-                                             skip_nonstandard=True).items())
-    bg_keyandseqpairs = list(load_fasta(fasta_file=bg_fasta,
-                                        skip_nonstandard=True).items())
-
+def match_gc_content(tomatch_keyandseqpairs, bg_keyandseqpairs, display=False):
+    tomatch_keyandseqpairs = load_fasta(fasta_file=to_match_fasta,
+                                        skip_nonstandard=True)
+    bg_keyandseqpairs = load_fasta(fasta_file=bg_fasta,
+                                   skip_nonstandard=True)
     gcsorted_matched_bg = sample_matched(
         set_to_match=tomatch_keyandseqpairs,
         set_to_sample_from=bg_keyandseqpairs,
         attrfunc=lambda x: calculate_gc_frac(x[1]),
         display=display)
-
-    #sort by the key, because otherwise the bg
-    # would end up sorted by gc content, which could create weird artifacts
-    # if the data are sequentially split for model training
-    seqnamesorted_matched_bg = sorted(gcsorted_matched_bg, key=lambda x: x[0]) 
-    seqnamesorted_tomatch = sorted(tomatch_keyandseqpairs, key=lambda x: x[0])
-
-    #write out to file
-    write_fasta(key_and_seq_pairs=seqnamesorted_matched_bg,
-                output_fasta=output_bg_fasta)
-    write_fasta(key_and_seq_pairs=seqnamesorted_tomatch,
-                output_fasta=output_tomatch_fasta)
+    return gcsorted_matched_bg
