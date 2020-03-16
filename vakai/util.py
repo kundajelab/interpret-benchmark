@@ -203,9 +203,7 @@ def write_fasta(key_and_seq_pairs, output_fasta):
     fp = open(output_fasta, "w")
     for idx,(key,seq) in enumerate(key_and_seq_pairs):
         fp.write('>'+key+'\n')
-        fp.write(seq)
-        if idx < len(key_and_seq_pairs)-1:
-            fp.write('\n')
+        fp.write(seq+"\n")
     fp.close()
     
 
