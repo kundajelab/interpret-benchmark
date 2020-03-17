@@ -40,4 +40,17 @@ fi
 ###
 #Step 4: generate simulated data
 ###
-generate_simulated_pos_and_neg ../chipseq_sim_config.properties
+if [ ! -e "sequences/sim_positives.txt.gz" ]; then
+    generate_simulated_pos_and_neg ../chipseq_sim_config.properties
+    gzip -f sequences/sim_positives.txt
+    gzip -f sequences/sim_negatives.txt
+fi
+
+###
+#Step 5: do the train-test split
+###
+../../../common_scripts/do_train_test_split.py
+gzip -f sequences/train_sim_positives.txt
+gzip -f sequences/test_sim_positives.txt
+gzip -f sequences/train_sim_negatives.txt
+gzip -f sequences/test_sim_negatives.txt

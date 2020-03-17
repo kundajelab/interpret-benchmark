@@ -70,6 +70,8 @@ def make_motifid_to_hits(seqid_to_hits, pos_seqids_set, neg_seqids_set):
                 assert seqid in neg_seqids_set
                 motifid_to_neghits[motif.motifid].append(motif)
     return motifid_to_poshits, motifid_to_neghits
+
+
 def generate_simulated_pos_and_neg(cfg):
     seqid_to_hits = read_fimo(util.open_fh(cfg['GENSIM']['FIMO_FILE']))
     pos_idsandseqs = util.load_fasta(cfg['GENSIM']['POSITIVES_FASTA'])
@@ -81,11 +83,13 @@ def generate_simulated_pos_and_neg(cfg):
 
     motifids = sorted(motifid_to_poshits.keys())
     passing_motif_ids = set()
+
     REGION_SIZE = int(cfg['SHARED']['REGION_SIZE'])
     MIN_ENRICHMENT_SCORE = float(cfg['GENSIM']['MIN_ENRICHMENT_SCORE'])
     MIN_POS_HITS = int(cfg['GENSIM']['MIN_POS_HITS'])
+    OUTDIR = cfg['GENSIM']['OUTDIR']
 
-    retained_motifs_logfh = open("sequences/retained_motifs.log","w")
+    retained_motifs_logfh = open(OUTDIR+"/retained_motifs.log","w")
     retained_motifs_logfh.write(
      "motif\tnposhits\tnneghits\t"
     +"poshitdensity\tneghitdensity\thitdensityratio\t"
@@ -123,15 +127,14 @@ def generate_simulated_pos_and_neg(cfg):
              +str(weighted_hit_density_ratio)+"\n")
     retained_motifs_logfh.close()
 
-    POS_SIM_OUTFILE = cfg['GENSIM']['POS_SIM_OUTFILE']
-    NEG_SIM_OUTFILE = cfg['GENSIM']['NEG_SIM_OUTFILE']
+    POS_SIM_OUTFILE = OUTDIR+"/"+cfg['GENSIM']['POS_SIM_OUTFILE']
+    NEG_SIM_OUTFILE = OUTDIR+"/"+cfg['GENSIM']['NEG_SIM_OUTFILE']
 
     rng = np.random.RandomState(1234)
 
     #count the number of positions occupied by the motifs
     pos_occupied_positions = np.zeros((len(pos_idsandseqs), REGION_SIZE))
     pos_sim_outfh = open(POS_SIM_OUTFILE, 'w')
-    pos_sim_outfh.write("seqid\tsequences\tmotifhits\n")
     skipped_pos_seqs = 0
     for pos_idx,(pos_seq_id, orig_pos_seq) in enumerate(pos_idsandseqs):
         dn_shuffled_bg = [x for x in
@@ -144,7 +147,8 @@ def generate_simulated_pos_and_neg(cfg):
                         ==orig_pos_seq[motif_hit.start:motif_hit.end])
                 dn_shuffled_bg[motif_hit.start:motif_hit.end] =\
                     motif_hit.matchedseq
-                pos_occupied_positions[pos_idx,motif_hit.start:motif_hit.end] = 1
+                pos_occupied_positions[pos_idx,motif_hit.start:
+                                               motif_hit.end] = 1
             simulated_seq = "".join(dn_shuffled_bg)
             pos_sim_outfh.write(pos_seq_id+"\t"+simulated_seq+"\t"+
                   (",".join([motifhit_to_str(x) for x in motif_hits_in_seq]))+"\n") 
@@ -156,7 +160,6 @@ def generate_simulated_pos_and_neg(cfg):
      
     neg_occupied_positions = np.zeros((len(neg_idsandseqs), REGION_SIZE))
     neg_sim_outfh = open(NEG_SIM_OUTFILE, 'w')
-    neg_sim_outfh.write("seqid\tsequences\tmotifhits\n")
     for neg_idx,(neg_seq_id,orig_neg_seq) in enumerate(neg_idsandseqs):
         random_pos_seq = pos_idsandseqs[rng.choice(a=len(pos_idsandseqs))][1]
         dn_shuffled_bg = [x for x in dinuc_shuffle.dinuc_shuffle(
@@ -178,7 +181,7 @@ def generate_simulated_pos_and_neg(cfg):
              density=True, bins=20, alpha=0.5)
     plt.hist(np.sum(neg_occupied_positions,axis=-1),
              density=True, bins=20, alpha=0.5)
-    plt.savefig("sequences/occupied_positions_histogram.png")
+    plt.savefig(OUTDIR+"/occupied_positions_histogram.png")
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser() 
