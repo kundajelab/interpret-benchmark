@@ -1,0 +1,12 @@
+{
+    "class": "fasta_inmemory_data_loader.ConcatTwoStreams",
+    "kwargs": {
+       "batch_size": 50,
+       "positives_fasta_source": "sequences/test_sim_positives.txt.gz",
+       "negatives_fasta_source": "sequences/test_sim_negatives.txt.gz",
+       "fasta_col": 1,
+       "rc_augment": false,
+       "labels_dtype": "int",
+       "pre_onehot": true
+    }
+}
