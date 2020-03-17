@@ -26,11 +26,18 @@ if [ ! -e "sequences/pos_enriched_motifs" ]; then
 fi
 
 ###
-#Step X: run FIMO
+#Step 3: run FIMO
 ###
-# write the homer motifs in the meme format, then launch the FIMO run
-homer2meme sequences/pos_enriched_motifs/homerResults/motif?.motif sequences/pos_enriched_motifs/homerResults/motif??.motif --output_file sequences/filtered_pos_enriched_motifs.meme
-cat sequences/positives.fa sequences/negatives.fa > sequences/concat_pos_and_neg.fa
-module load meme
-fimo --max-stored-scores 5000000 --oc sequences/fimo_out sequences/filtered_pos_enriched_motifs.meme sequences/concat_pos_and_neg.fa 
-gzip -f sequences/fimo_out/fimo.txt
+if [ ! -e "sequences/fimo_out/fimo.txt.gz" ]; then
+    # write the homer motifs in the meme format, then launch the FIMO run
+    homer2meme sequences/pos_enriched_motifs/homerResults/motif?.motif sequences/pos_enriched_motifs/homerResults/motif??.motif --output_file sequences/filtered_pos_enriched_motifs.meme
+    cat sequences/positives.fa sequences/negatives.fa > sequences/concat_pos_and_neg.fa
+    module load meme
+    fimo --max-stored-scores 5000000 --oc sequences/fimo_out sequences/filtered_pos_enriched_motifs.meme sequences/concat_pos_and_neg.fa 
+    gzip -f sequences/fimo_out/fimo.txt
+fi
+
+###
+#Step 4: generate simulated data
+###
+generate_simulated_pos_and_neg ../chipseq_sim_config.properties
