@@ -87,7 +87,8 @@
                     },
                     {
                         "class": "keras.layers.MaxPooling1D",
-                        "kwargs": {"pool_length": 40, "stride": 40}
+                        "kwargs": {"pool_length": 40, "stride": 40,
+                                   "padding":"same"}
                     },
                     {
                         "class": "keras.layers.Flatten",
