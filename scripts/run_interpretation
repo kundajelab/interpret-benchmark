@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+from __future__ import division, print_function, absolute_import
+import argparse
+from vakai import util
+import keras
+import deeplift
+from deeplift.util import compile_func
+from deeplift.layers import NonlinearMxtsMode 
+import deeplift.conversion.kerasapi_conversion as kc
+from collections import OrderedDict
+import tensorflow as tf
+import configparser
+import numpy as np
+
+
+def sanity_check(converted_grad_model, keras_model, onehot_seqs):
+    deeplift_prediction_func = compile_func(
+        [converted_grad_model.get_layers()[0].get_activation_vars()],
+         converted_grad_model.get_layers()[-1].get_activation_vars())
+    keras_model_preds = keras_model.predict(onehot_seqs, batch_size=200)
+    deeplift_model_preds = deeplift.util.run_function_in_batches(
+                                input_data_list=[onehot_seqs],
+                                func=deeplift_prediction_func,
+                                batch_size=200,
+                                progress_update=None)
+    print("maximum difference in predictions:",
+          np.max(np.array(deeplift_model_preds)
+                 -np.array(keras_model_preds)))
+    assert np.max(np.array(deeplift_model_preds)
+                  -np.array(keras_model_preds)) < 10**-5
+
+    #also do a sanity check for the gradients
+    gradient_tensor = tf.gradients(keras_model.layers[-2].output[:,0],
+                                   keras_model.input)[0]
+    grad_calc_func = compile_func([keras_model.input], gradient_tensor)
+    direct_calculated_grads = np.array(deeplift.util.run_function_in_batches(
+                                input_data_list=[onehot_seqs],
+                                func=grad_calc_func,
+                                batch_size=200,
+                                progress_update=None)) 
+    converted_calculated_grads = np.array(
+        converted_grad_model.get_target_multipliers_func(
+            find_scores_layer_idx=0,
+            target_layer_idx=-2)(task_idx=0,
+                                 input_data_list=[onehot_seqs],
+                                 batch_size=200,
+                                 progress_update=None))
+    print("maximum difference in calculated grads:",
+          np.max(np.array(converted_calculated_grads)
+                 -np.array(direct_calculated_grads)))
+    assert np.max(np.array(converted_calculated_grads)
+                  -np.array(direct_calculated_grads)) < 10**-5
+
+
+def run_interpretation(cfg, args):
+    input_seqs_fh = util.open_fh(args.input_seqs_file)
+    sequences = [(x.decode('utf-8') if hasattr(x,'decode') else x)
+                  .rstrip().split("\t")[1] for x in input_seqs_fh] 
+    onehot_seqs = util.one_hot_encode(seqs=sequences)
+    
+    keras_model_h5 = args.keras_model_h5
+    keras_model_json = args.keras_model_json
+    if (keras_model_json is None):
+        keras_model = keras.models.load_model(keras_model_h5)
+    else:
+        keras_model = util.load_keras_model_using_json(
+                           json_file_name=keras_model_json,
+                           h5_weights_file=keras_model_h5)
+    
+    methodtype_to_deepliftmodel = OrderedDict()
+    for methodtype, nonlinear_mxts_mode in [
+               ('deeplift-rs', NonlinearMxtsMode.Rescale),
+               ('deeplift-rcrs', NonlinearMxtsMode.DeepLIFT_GenomicsDefault),
+               ('gradtimesinp', NonlinearMxtsMode.Gradient)]:
+        methodtype_to_deepliftmodel[methodtype] =\
+            kc.convert_model_from_saved_files(
+                h5_file=keras_model_h5,
+                json_file=keras_model_json,
+                nonlinear_mxts_mode=nonlinear_mxts_mode)
+    sanity_check(converted_grad_model=
+                  methodtype_to_deepliftmodel['gradtimesinp'],
+                 keras_model=keras_model, onehot_seqs=onehot_seqs) 
+
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser() 
+    parser.add_argument("--configfile", required=True)
+    parser.add_argument("--input_seqs_file", required=True)
+    parser.add_argument("--keras_model_h5", required=True)
+    parser.add_argument("--keras_model_json")
+    parser.add_argument("--output_h5_file", required=True)
+    args = parser.parse_args()
+    cfg = configparser.ConfigParser() 
+    cfg.read(args.configfile)
+    run_interpretation(cfg['INTERPRETATION'], args)

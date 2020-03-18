@@ -7,6 +7,37 @@ from collections import OrderedDict
 import numpy as np
 
 
+one_hot_lookup = {
+        'a':[1,0,0,0],
+        'c':[0,1,0,0],
+        'g':[0,0,1,0],
+        't':[0,0,0,1],
+        'n':[0,0,0,0],
+        'A':[1,0,0,0],
+        'C':[0,1,0,0],
+        'G':[0,0,1,0],
+        'T':[0,0,0,1]}
+
+
+def one_hot_encode(seqs):
+    return np.array([[one_hot_lookup[base] for base in seq]
+                     for seq in seqs])
+
+
+def load_keras_model_using_json(json_file_name, h5_weights_file):
+    from keras.models import model_from_json 
+    json_file = open(json_file_name, 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    print("Loading Keras JSON model from file " + json_file_name)
+    loaded_model = model_from_json(loaded_model_json)
+    # load weights into new model
+    print("Loading Keras model weights from file " + h5_weights_file)
+    loaded_model.load_weights(h5_weights_file)
+    print("Successfully loaded")
+    return loaded_model
+
+
 def create_dir(working_dir, mustcreate=True):
     if not os.path.exists(working_dir):
         os.mkdir(working_dir)

@@ -73,9 +73,9 @@ def make_motifid_to_hits(seqid_to_hits, pos_seqids_set, neg_seqids_set):
 
 
 def generate_simulated_pos_and_neg(cfg):
-    seqid_to_hits = read_fimo(util.open_fh(cfg['GENSIM']['FIMO_FILE']))
-    pos_idsandseqs = util.load_fasta(cfg['GENSIM']['POSITIVES_FASTA'])
-    neg_idsandseqs = util.load_fasta(cfg['GENSIM']['NEGATIVES_FASTA'])
+    seqid_to_hits = read_fimo(util.open_fh(cfg['FIMO_FILE']))
+    pos_idsandseqs = util.load_fasta(cfg['POSITIVES_FASTA'])
+    neg_idsandseqs = util.load_fasta(cfg['NEGATIVES_FASTA'])
     motifid_to_poshits, motifid_to_neghits = make_motifid_to_hits(
         seqid_to_hits=seqid_to_hits,
         pos_seqids_set=set([x[0] for x in pos_idsandseqs]),
@@ -84,10 +84,10 @@ def generate_simulated_pos_and_neg(cfg):
     motifids = sorted(motifid_to_poshits.keys())
     passing_motif_ids = set()
 
-    REGION_SIZE = int(cfg['SHARED']['REGION_SIZE'])
-    MIN_ENRICHMENT_SCORE = float(cfg['GENSIM']['MIN_ENRICHMENT_SCORE'])
-    MIN_POS_HITS = int(cfg['GENSIM']['MIN_POS_HITS'])
-    OUTDIR = cfg['GENSIM']['OUTDIR']
+    REGION_SIZE = cfg.getint(['REGION_SIZE'])
+    MIN_ENRICHMENT_SCORE = float(cfg['MIN_ENRICHMENT_SCORE'])
+    MIN_POS_HITS = int(cfg['MIN_POS_HITS'])
+    OUTDIR = cfg['OUTDIR']
 
     retained_motifs_logfh = open(OUTDIR+"/retained_motifs.log","w")
     retained_motifs_logfh.write(
@@ -127,8 +127,8 @@ def generate_simulated_pos_and_neg(cfg):
              +str(weighted_hit_density_ratio)+"\n")
     retained_motifs_logfh.close()
 
-    POS_SIM_OUTFILE = OUTDIR+"/"+cfg['GENSIM']['POS_SIM_OUTFILE']
-    NEG_SIM_OUTFILE = OUTDIR+"/"+cfg['GENSIM']['NEG_SIM_OUTFILE']
+    POS_SIM_OUTFILE = OUTDIR+"/"+cfg['POS_SIM_OUTFILE']
+    NEG_SIM_OUTFILE = OUTDIR+"/"+cfg['NEG_SIM_OUTFILE']
 
     rng = np.random.RandomState(1234)
 
@@ -189,4 +189,4 @@ if __name__=='__main__':
     args = parser.parse_args()
     cfg = configparser.ConfigParser() 
     cfg.read(args.configfile)
-    generate_simulated_pos_and_neg(cfg)
+    generate_simulated_pos_and_neg(cfg['GENSIM'])

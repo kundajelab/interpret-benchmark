@@ -11,5 +11,6 @@ if __name__== '__main__':
           install_requires=['numpy>=1.9'],
           scripts=['scripts/generate_pos_and_neg_fasta',
                    'scripts/homer2meme',
-                   'scripts/generate_simulated_pos_and_neg'],
+                   'scripts/generate_simulated_pos_and_neg',
+                   'scripts/run_interpretation'],
           name='vakai')
