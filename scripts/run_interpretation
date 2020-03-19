@@ -11,6 +11,7 @@ from collections import OrderedDict
 import tensorflow as tf
 import configparser
 import numpy as np
+from deeplift.dinuc_shuffle import dinuc_shuffle
 
 
 def sanity_check(converted_grad_model, keras_model, onehot_seqs):
@@ -52,8 +53,206 @@ def sanity_check(converted_grad_model, keras_model, onehot_seqs):
                   -np.array(direct_calculated_grads)) < 10**-5
 
 
+def compile_scoring_functions(methodtype_to_deepliftmodel,
+                              backprop_methods_set):
+    if (any(['ig' in x for x in backprop_methods_set])):
+        gradient_func = (methodtype_to_deepliftmodel['gradtimesinp']
+                         .get_target_multipliers_func(find_scores_layer_idx=0,
+                                                      target_layer_idx=-2)) 
+    methodtype_to_scoringfunc = OrderedDict()  
+    for methodtype in backprop_methods_set:
+        if (methodtype in ['gradtimesinp', 'deeplift-rs', 'deeplift-rcrs']):
+            deepliftmodel = methodtype_to_deepliftmodel[methodtype]
+            methodtype_to_scoringfunc[methodtype] =\
+                deepliftmodel.get_target_contribs_func(
+                                find_scores_layer_idx=0,
+                                target_layer_idx=-2)
+        elif ('ig' in methodtype):
+            num_intervals = int(methodtype.split("-")[1]) 
+            integrated_gradients_func =\
+                deeplift.util.get_integrated_gradients_function(
+                  gradient_computation_function=gradient_func,
+                  num_intervals=num_intervals)
+            methodtype_to_scoringfunc[methodtype] = integrated_gradients_func
+        else:
+            raise RuntimeError("Unsupported methodtype:",methodtype) 
+    return methodtype_to_scoringfunc
+
+
+def get_methodtype_to_deepliftmodel(keras_model_h5, keras_model_json):
+    methodtype_to_deepliftmodel = OrderedDict()
+    for methodtype, nonlinear_mxts_mode in [
+               ('deeplift-rs', NonlinearMxtsMode.Rescale),
+               ('deeplift-rcrs', NonlinearMxtsMode.DeepLIFT_GenomicsDefault),
+               ('gradtimesinp', NonlinearMxtsMode.Gradient)]:
+        methodtype_to_deepliftmodel[methodtype] =\
+            kc.convert_model_from_saved_files(
+                h5_file=keras_model_h5,
+                json_file=keras_model_json,
+                nonlinear_mxts_mode=nonlinear_mxts_mode)
+    return methodtype_to_deepliftmodel
+
+
+def compute_and_write_scores_flatref(
+        methodtypes, methodtype_to_scoringfunc,
+        onehot_seqs, output_h5, batch_size, flatref,
+        referencename):
+    for methodtype in methodtypes:
+        datasetname = methodtype+"_ref:"+referencename
+        print("Computing scores for "+datasetname)
+        score_func = methodtype_to_scoringfunc[methodtype]
+        scores = np.array(score_func(
+                    task_idx=0,
+                    input_data_list=[onehot_seqs],
+                    input_references_list=[flatref],
+                    batch_size=batch_size,
+                    progress_update=1000))
+        assert scores.shape[2]==4
+        scores = np.sum(scores, axis=2)
+        output_h5.create_dataset(datasetname, data=scores)
+
+
+def compute_and_write_scores_zeroref(**kwargs):
+    flatref = np.zeros(4)[None,None,:]
+    compute_and_write_scores_flatref(
+        **kwargs, flatref=flatref, referencename='allzeros')
+
+
+def compute_and_write_scores_avgref(methodtypes, methodtype_to_scoringfunc,
+                                    onehot_seqs, output_h5, batch_size):
+    flatref = np.mean(onehot_seqs, axis=(0,1))[None,None,:]
+    compute_and_write_scores_flatref(
+        **kwargs, flatref=flatref, referencename='avgc')
+
+
+def compute_and_write_scores_shuffref(methodtypes, methodtype_to_scoringfunc,
+                                      onehot_seqs, output_h5, batch_size,
+                                      num_shuffrefs):
+    for methodtype in methodtypes:
+        for num_shuffref in num_shuffrefs: 
+            datasetname = methodtype+"_ref:"+referencename+"-"+str(num_shuffref)
+            print("Computing scores for "+datasetname)
+            score_func = get_shuffle_seq_ref_function(
+                score_computation_function=
+                  methodtype_to_scoringfunc[methodtype],
+                shuffle_func=dinuc_shuffle,
+                #onehot_func is the None because the input should
+                # already be one-hot encoded
+                one_hot_func=None)
+            scores = np.array(score_func(
+                        task_idx=0,
+                        input_data_sequences=onehot_seqs,
+                        num_refs_per_seq=num_shuffref,
+                        batch_size=batch_size,
+                        progress_update=1000))
+            assert scores.shape[2]==4
+            scores = np.sum(scores, axis=2)
+            output_h5.create_dataset(datasetname, data=scores)
+
+
+def empty_ism_buffer(results_arr,
+                     input_data_onehot,
+                     perturbed_inputs_preds,
+                     perturbed_inputs_info):
+    perturbed_inputs_preds = np.squeeze(perturbed_inputs_preds)
+    assert len(perturbed_inputs_preds.shape)==1
+    for perturbed_input_pred,perturbed_input_info\
+        in zip(perturbed_inputs_preds, perturbed_inputs_info):
+        example_idx = perturbed_input_info[0]
+        if (perturbed_input_info[1]=="original"):
+            results_arr[example_idx] +=\
+                (perturbed_input_pred*input_data_onehot[example_idx])
+        else:
+            pos_idx,base_idx = perturbed_input_info[1]
+            results_arr[example_idx,pos_idx,base_idx] = perturbed_input_pred
+
+
+def make_ism_func(prediction_func,
+                  orig_flank_around_middle_to_perturb=None,
+                  batch_size=200):
+
+    def ism_func(input_data_onehot, progress_update=10000, **kwargs):
+        results_arr = np.zeros_like(input_data_onehot).astype("float64")
+        perturbed_inputs_info = []
+        perturbed_onehot_seqs = []
+        perturbed_inputs_preds = []
+        num_done = 0
+        for i,onehot_seq in enumerate(input_data_onehot):
+            perturbed_onehot_seqs.append(onehot_seq)
+            perturbed_inputs_info.append((i,"original"))
+            if (orig_flank_around_middle_to_perturb is None):
+                flank_around_middle_to_perturb = int(len(onehot_seq)/2)
+            else:
+                flank_around_middle_to_perturb =\
+                    orig_flank_around_middle_to_perturb
+            for pos in range(int(len(onehot_seq)/2)
+                                 -flank_around_middle_to_perturb,
+                             int(len(onehot_seq)/2)
+                                 +flank_around_middle_to_perturb):
+                for base_idx in range(4):
+                    if onehot_seq[pos,base_idx]==0:
+                        assert len(onehot_seq.shape)==2
+                        new_onehot = np.zeros_like(onehot_seq) + onehot_seq
+                        new_onehot[pos,:] = 0
+                        new_onehot[pos,base_idx] = 1
+                        perturbed_onehot_seqs.append(new_onehot)
+                        perturbed_inputs_info.append((i,(pos,base_idx)))
+                        num_done += 1
+                        if ((progress_update is not None)
+                            and num_done%progress_update==0):
+                            print("Done",num_done)
+                        if (len(perturbed_inputs_info)>=batch_size):
+                            empty_ism_buffer(
+                                 results_arr=results_arr,
+                                 input_data_onehot=input_data_onehot,
+                                 perturbed_inputs_preds=
+                                  prediction_func([perturbed_onehot_seqs]),
+                                 perturbed_inputs_info=perturbed_inputs_info)
+                            perturbed_inputs_info = []
+                            perturbed_onehot_seqs = []
+        if (len(perturbed_inputs_info)>0):
+            empty_ism_buffer(
+                 results_arr=results_arr,
+                 input_data_onehot=input_data_onehot,
+                 perturbed_inputs_preds=
+                  prediction_func([perturbed_onehot_seqs]),
+                 perturbed_inputs_info=perturbed_inputs_info)
+        perturbed_inputs_info = []
+        perturbed_onehot_seqs = []
+        results_arr = results_arr - np.mean(results_arr,axis=-1)[:,:,None]
+        return results_arr
+    return ism_func
+
+
+def compute_and_write_scores_ism(keras_model, onehot_seqs, output_h5):
+    #create the scoring function; will do ISM w.r.t. the logit of the
+    # final simgoid
+    prediction_func = keras.models.Model(
+                       input=keras_model.input,
+                       output=keras_model.layers[-2].output[:,0]).predict 
+    ism_func = make_ism_func(prediction_func=prediction_func,
+                             orig_flank_around_middle_to_perturb=None,
+                             batch_size=1024) 
+    print("Running ISM")
+    ism_mat = ism_func(input_data_onehot=onehot_seqs,
+                       progress_update=1000)
+    ism_scores = np.sum(ism_mat*onehot_seqs, axis=2)
+    output_h5.create_dataset("ism", ism_scores)
+
+
 def run_interpretation(cfg, args):
+    
+    batch_size = cfg.getint('BATCH_SIZE')
+    zeroref_methods = cfg['ZEROREF_METHODS'].split(",")
+    avgc_methods = cfg['AVGC_METHODS'].split(",") 
+    shuffref_methods = cfg['SHUFF_REF_METHODS'].split(",")
+    num_shuffrefs = [int(x) for x in cfg['NUM_SHUFF_REFS'].split(",")]
+    run_ism = cfg.getboolean('RUNISM')
+    backprop_methods_set = set(zeroref_methods+avgc_methods+shuffref_methods)
+
     input_seqs_fh = util.open_fh(args.input_seqs_file)
+    seqids = [(x.decode('utf-8') if hasattr(x,'decode') else x)
+              .rstrip().split("\t")[0] for x in input_seqs_fh]
     sequences = [(x.decode('utf-8') if hasattr(x,'decode') else x)
                   .rstrip().split("\t")[1] for x in input_seqs_fh] 
     onehot_seqs = util.one_hot_encode(seqs=sequences)
@@ -67,19 +266,37 @@ def run_interpretation(cfg, args):
                            json_file_name=keras_model_json,
                            h5_weights_file=keras_model_h5)
     
-    methodtype_to_deepliftmodel = OrderedDict()
-    for methodtype, nonlinear_mxts_mode in [
-               ('deeplift-rs', NonlinearMxtsMode.Rescale),
-               ('deeplift-rcrs', NonlinearMxtsMode.DeepLIFT_GenomicsDefault),
-               ('gradtimesinp', NonlinearMxtsMode.Gradient)]:
-        methodtype_to_deepliftmodel[methodtype] =\
-            kc.convert_model_from_saved_files(
+    methodtype_to_deepliftmodel = get_methodtype_to_deepliftmodel(
                 h5_file=keras_model_h5,
                 json_file=keras_model_json,
                 nonlinear_mxts_mode=nonlinear_mxts_mode)
     sanity_check(converted_grad_model=
                   methodtype_to_deepliftmodel['gradtimesinp'],
                  keras_model=keras_model, onehot_seqs=onehot_seqs) 
+    methodtype_to_scoringfunc = compile_scoring_functions(
+            methodtype_to_deepliftmodel=methodtype_to_deepliftmodel,
+            backprop_methods_set=backprop_methods_set) 
+    
+    output_h5 = h5py.File(args.output_h5_file)
+    output_h5.create_dataset("seqids", data=np.array(seqids))
+    compute_and_write_scores_zeroref(
+        methods=zeroref_methods,
+        methodtype_to_scoringfunc=methodtype_to_scoringfunc,
+        onehot_seqs=onehot_seqs, output_h5=output_h5, batch_size=batch_size)
+    compute_and_write_scores_avgref(
+        methods=avgc_methods,
+        methodtype_to_scoringfunc=methodtype_to_scoringfunc,
+        onehot_seqs=onehot_seqs, output_h5=output_h5, batch_size=batch_size)
+    compute_and_write_scores_shuffref(
+        methods=shuffref_methods,
+        methodtype_to_scoringfunc=methodtype_to_scoringfunc,
+        onehot_seqs=onehot_seqs, output_h5=output_h5, batch_size=batch_size,
+        num_shuffrefs=num_shuffrefs)
+
+    if (run_ism):
+        compute_and_write_scores_ism(
+            model=keras_model,
+            onehot_seqs=onehot_seqs, output_h5=output_h5)
 
 
 if __name__=='__main__':
