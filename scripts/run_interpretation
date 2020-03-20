@@ -284,7 +284,6 @@ def run_interpretation(cfg, args):
                   .rstrip().split("\t")[1] for x in
                  util.open_fh(args.input_seqs_file)] 
     onehot_seqs = util.one_hot_encode(seqs=sequences)
-    onehot_seqs = onehot_seqs[:10]
     
     keras_model_h5 = args.keras_model_h5
     keras_model_json = args.keras_model_json
