@@ -4,6 +4,8 @@ import argparse
 import configparser
 import numpy as np
 from vakai import util, dinuc_shuffle
+from vakai import motifhit
+from vakai.motifhit import MotifHit, motifhit_to_str
 from collections import defaultdict, namedtuple
 import matplotlib
 matplotlib.use('Agg')
@@ -19,17 +21,6 @@ rc_map = {'A': 'T', 'a':'t',
 def take_rc(seq):
     return "".join(rc_map[x] for x in seq[::-1])
     
-
-MotifHit = namedtuple('MotifHit', ['motifid', 'seqid', 'start', 'end',
-                                   'onposstrand', 'score', 'pval',
-                                   'qval', 'matchedseq'])
-
-
-def motifhit_to_str(motifhit):
-    return (motifhit.motifid+"_"+"pos-"+str(motifhit.onposstrand)
-            +"_"+str(motifhit.start)+"-"+str(motifhit.end)
-            +"_"+str(motifhit.pval)+"_"+str(motifhit.matchedseq))
-
 
 def read_fimo(file_handle):
     seqid_to_hits = defaultdict(list)
@@ -84,7 +75,7 @@ def generate_simulated_pos_and_neg(cfg):
     motifids = sorted(motifid_to_poshits.keys())
     passing_motif_ids = set()
 
-    REGION_SIZE = cfg.getint(['REGION_SIZE'])
+    REGION_SIZE = cfg.getint('REGION_SIZE')
     MIN_ENRICHMENT_SCORE = float(cfg['MIN_ENRICHMENT_SCORE'])
     MIN_POS_HITS = int(cfg['MIN_POS_HITS'])
     OUTDIR = cfg['OUTDIR']
