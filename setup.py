@@ -12,5 +12,6 @@ if __name__== '__main__':
           scripts=['scripts/generate_pos_and_neg_fasta',
                    'scripts/homer2meme',
                    'scripts/generate_simulated_pos_and_neg',
-                   'scripts/run_interpretation'],
+                   'scripts/run_interpretation',
+                   'scripts/compute_motif_detection_stats'],
           name='vakai')
