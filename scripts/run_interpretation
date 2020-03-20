@@ -4,7 +4,7 @@ import argparse
 from vakai import util
 import keras
 import deeplift
-from deeplift.util import compile_func
+from deeplift.util import compile_func, get_shuffle_seq_ref_function
 from deeplift.layers import NonlinearMxtsMode 
 import deeplift.conversion.kerasapi_conversion as kc
 from collections import OrderedDict
@@ -12,6 +12,7 @@ import tensorflow as tf
 import configparser
 import numpy as np
 from deeplift.dinuc_shuffle import dinuc_shuffle
+import h5py
 
 
 def sanity_check(converted_grad_model, keras_model, onehot_seqs):
@@ -109,7 +110,10 @@ def compute_and_write_scores_flatref(
                     progress_update=1000))
         assert scores.shape[2]==4
         scores = np.sum(scores, axis=2)
-        output_h5.create_dataset(datasetname, data=scores)
+        if (datasetname in output_h5):
+            print("WARNING: "+datasetname+" already exists!!! Won't overwrite")
+        else:
+            output_h5.create_dataset(datasetname, data=scores)
 
 
 def compute_and_write_scores_zeroref(**kwargs):
@@ -118,24 +122,36 @@ def compute_and_write_scores_zeroref(**kwargs):
         **kwargs, flatref=flatref, referencename='allzeros')
 
 
-def compute_and_write_scores_avgref(methodtypes, methodtype_to_scoringfunc,
-                                    onehot_seqs, output_h5, batch_size):
+def compute_and_write_scores_avgref(onehot_seqs, **kwargs):
     flatref = np.mean(onehot_seqs, axis=(0,1))[None,None,:]
     compute_and_write_scores_flatref(
-        **kwargs, flatref=flatref, referencename='avgc')
+        **kwargs, onehot_seqs=onehot_seqs,
+        flatref=flatref, referencename='avgc')
 
 
 def compute_and_write_scores_shuffref(methodtypes, methodtype_to_scoringfunc,
                                       onehot_seqs, output_h5, batch_size,
                                       num_shuffrefs):
+    #pregenerate the shuffling
+    rng = np.random.RandomState(1)
+    max_num_shuffref = max(num_shuffrefs)
+    shuffled_seqs = []
+    for i in range(len(onehot_seqs)):
+        if (i%100==0):
+            print("Generating shuffled seqs for seq "+str(i))
+        shuffled_seqs.append([
+            dinuc_shuffle(s=onehot_seqs[i], rng=rng)
+            for x in range(max_num_shuffref)])
+    shuffled_seqs = np.array(shuffled_seqs) 
+
     for methodtype in methodtypes:
         for num_shuffref in num_shuffrefs: 
-            datasetname = methodtype+"_ref:"+referencename+"-"+str(num_shuffref)
+            datasetname = methodtype+"_ref:shuff-"+str(num_shuffref)
             print("Computing scores for "+datasetname)
             score_func = get_shuffle_seq_ref_function(
                 score_computation_function=
                   methodtype_to_scoringfunc[methodtype],
-                shuffle_func=dinuc_shuffle,
+                shuffle_func=None,#dinuc_shuffle,
                 #onehot_func is the None because the input should
                 # already be one-hot encoded
                 one_hot_func=None)
@@ -144,10 +160,17 @@ def compute_and_write_scores_shuffref(methodtypes, methodtype_to_scoringfunc,
                         input_data_sequences=onehot_seqs,
                         num_refs_per_seq=num_shuffref,
                         batch_size=batch_size,
-                        progress_update=1000))
+                        progress_update=1000,
+                        pregen_refs=shuffled_seqs[:,:num_shuffref,:,:].reshape(
+                         (-1, onehot_seqs.shape[1], onehot_seqs.shape[2]))
+                        ))
             assert scores.shape[2]==4
             scores = np.sum(scores, axis=2)
-            output_h5.create_dataset(datasetname, data=scores)
+            if (datasetname in output_h5):
+                print("WARNING: "+datasetname
+                      +" already exists!!! Won't overwrite")
+            else:
+                output_h5.create_dataset(datasetname, data=scores)
 
 
 def empty_ism_buffer(results_arr,
@@ -229,7 +252,7 @@ def compute_and_write_scores_ism(keras_model, onehot_seqs, output_h5):
     # final simgoid
     prediction_func = keras.models.Model(
                        input=keras_model.input,
-                       output=keras_model.layers[-2].output[:,0]).predict 
+                       output=keras_model.layers[-2].output).predict 
     ism_func = make_ism_func(prediction_func=prediction_func,
                              orig_flank_around_middle_to_perturb=None,
                              batch_size=1024) 
@@ -237,7 +260,11 @@ def compute_and_write_scores_ism(keras_model, onehot_seqs, output_h5):
     ism_mat = ism_func(input_data_onehot=onehot_seqs,
                        progress_update=1000)
     ism_scores = np.sum(ism_mat*onehot_seqs, axis=2)
-    output_h5.create_dataset("ism", ism_scores)
+    if ("ism" in output_h5):
+        print("WARNING: ism already exists!!! Won't overwrite")
+    else:
+        output_h5.create_dataset("ism", data=ism_scores)
+
 
 
 def run_interpretation(cfg, args):
@@ -250,12 +277,14 @@ def run_interpretation(cfg, args):
     run_ism = cfg.getboolean('RUNISM')
     backprop_methods_set = set(zeroref_methods+avgc_methods+shuffref_methods)
 
-    input_seqs_fh = util.open_fh(args.input_seqs_file)
     seqids = [(x.decode('utf-8') if hasattr(x,'decode') else x)
-              .rstrip().split("\t")[0] for x in input_seqs_fh]
+              .rstrip().split("\t")[0] for x in
+              util.open_fh(args.input_seqs_file)]
     sequences = [(x.decode('utf-8') if hasattr(x,'decode') else x)
-                  .rstrip().split("\t")[1] for x in input_seqs_fh] 
+                  .rstrip().split("\t")[1] for x in
+                 util.open_fh(args.input_seqs_file)] 
     onehot_seqs = util.one_hot_encode(seqs=sequences)
+    onehot_seqs = onehot_seqs[:10]
     
     keras_model_h5 = args.keras_model_h5
     keras_model_json = args.keras_model_json
@@ -267,9 +296,8 @@ def run_interpretation(cfg, args):
                            h5_weights_file=keras_model_h5)
     
     methodtype_to_deepliftmodel = get_methodtype_to_deepliftmodel(
-                h5_file=keras_model_h5,
-                json_file=keras_model_json,
-                nonlinear_mxts_mode=nonlinear_mxts_mode)
+                                    keras_model_h5=keras_model_h5,
+                                    keras_model_json=keras_model_json)
     sanity_check(converted_grad_model=
                   methodtype_to_deepliftmodel['gradtimesinp'],
                  keras_model=keras_model, onehot_seqs=onehot_seqs) 
@@ -278,25 +306,28 @@ def run_interpretation(cfg, args):
             backprop_methods_set=backprop_methods_set) 
     
     output_h5 = h5py.File(args.output_h5_file)
-    output_h5.create_dataset("seqids", data=np.array(seqids))
+    if ("seqids" in output_h5):
+        print("seqids entry already created in",args.output_h5_file)
+    else:
+        output_h5.create_dataset("seqids", data=np.array(seqids, dtype='S'))
     compute_and_write_scores_zeroref(
-        methods=zeroref_methods,
+        methodtypes=zeroref_methods,
         methodtype_to_scoringfunc=methodtype_to_scoringfunc,
         onehot_seqs=onehot_seqs, output_h5=output_h5, batch_size=batch_size)
     compute_and_write_scores_avgref(
-        methods=avgc_methods,
+        methodtypes=avgc_methods,
         methodtype_to_scoringfunc=methodtype_to_scoringfunc,
         onehot_seqs=onehot_seqs, output_h5=output_h5, batch_size=batch_size)
     compute_and_write_scores_shuffref(
-        methods=shuffref_methods,
+        methodtypes=shuffref_methods,
         methodtype_to_scoringfunc=methodtype_to_scoringfunc,
         onehot_seqs=onehot_seqs, output_h5=output_h5, batch_size=batch_size,
         num_shuffrefs=num_shuffrefs)
-
     if (run_ism):
         compute_and_write_scores_ism(
-            model=keras_model,
+            keras_model=keras_model,
             onehot_seqs=onehot_seqs, output_h5=output_h5)
+    output_h5.close()
 
 
 if __name__=='__main__':
