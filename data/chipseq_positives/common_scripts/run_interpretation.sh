@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+mkdir interpretation
+
 model_ids_to_use_file="model_ids_to_use.txt"
 input_seqs_file="sequences/test_sim_positives.txt.gz"
 

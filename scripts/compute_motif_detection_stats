@@ -3,31 +3,105 @@ from __future__ import division, absolute_import, print_function
 import argparse
 from collections import OrderedDict, defaultdict, namedtuple
 import json
+from vakai import util
 from vakai.motifhit import motifhit_from_str 
+from sklearn.metrics import roc_auc_score, average_precision_score
+import numpy as np
+import h5py
+
+
+def recall_at_fdr(y_true, y_score, fdr_thresh):
+    #sort in descending order of y_score
+    sorted_ytrue_yscore = sorted(zip(y_true, y_score), key=lambda x: -x[1]) 
+    sorted_ytrue = np.array([x[0] for x in sorted_ytrue_yscore])
+    sorted_ytrue_cumsum = np.cumsum(sorted_ytrue)
+    recall = sorted_ytrue_cumsum/np.sum(sorted_ytrue)
+    precision = sorted_ytrue_cumsum/(np.arange(len(y_true))+1) 
+    fdr_passing_mask = precision > (1-fdr_thresh)
+    if (np.sum(fdr_passing_mask) > 0):
+        max_recall_at_fdrthresh = np.max(recall[fdr_passing_mask])
+    else:
+        max_recall_at_fdrthresh = 0.0
+    return max_recall_at_fdrthresh
+
+
+def max_pr_at_recall_exceed_pr(y_true, y_score):
+    #sort in descending order of y_score
+    sorted_ytrue_yscore = sorted(zip(y_true, y_score), key=lambda x: -x[1]) 
+    sorted_ytrue = np.array([x[0] for x in sorted_ytrue_yscore])
+    sorted_ytrue_cumsum = np.cumsum(sorted_ytrue)
+    recall = sorted_ytrue_cumsum/np.sum(sorted_ytrue)
+    precision = sorted_ytrue_cumsum/(np.arange(len(y_true))+1) 
+    to_return = np.max(precision[recall > precision])
+    return to_return
 
 
 def read_sequences_and_motifs_file(sequences_and_motifs_file):
-    #TODO: verify that sequence predicted by motifhit lines up with what's
-    # actually in the sequence at that position
-    pass
+    seqids = []
+    onehot_sequences = []
+    motifs_in_seqs = []
+    fh = util.open_fh(sequences_and_motifs_file)
+    for line in fh:
+        seqid, sequence, motifstrings = line.decode("utf-8").rstrip().split("\t") 
+        seqids.append(seqid)
+        onehot_sequences.append(util.one_hot_encode(sequence))
+        motifs = [motifhit_from_str(motifstring=motifstring,seqid=seqid)
+                  for motifstring in motifstrings.split(",")]
+        #do a sanity check for each motif
+        for motif in motifs:
+            assert sequence[motif.start:motif.end]==motif.matchedseq 
+        motifs_in_seqs.append(motifs)
+    fh.close()
+    onehot_sequences = np.array(onehot_sequences)
+    return seqids, onehot_sequences, motifs_in_seqs  
 
 
 def get_motif_to_length(motifs_in_seqs):
-    pass
+    motif_to_length = {}
+    for motifs_in_seq in motifs_in_seqs:
+        for motif in motifs_in_seq:
+            if (motif.motifid not in motif_to_length):
+                motif_to_length[motif.motifid] = motif.end-motif.start
+    return motif_to_length
 
 
-def get_motif_to_pos_windows(motifs_in_seqs, seqlens):
-    raise RuntimeError()
+def get_motif_to_hitlocations(motifs_in_seqs):
+    motif_to_hitlocations = defaultdict(list) 
+    for seqidx, motifs_in_seq in enumerate(motifs_in_seqs):
+        for motif in motifs_in_seq:
+            motif_to_hitlocations[motif.motifid].append((seqidx, motif.start)) 
+    return motif_to_hitlocations
 
 
-def get_length_to_neg_windows(motifs_in_seqs, lengths, seqlens):
-    #create an 'occupied positions' array
-    #use that to find windows of a given length that overlap no motifs
-    raise RuntimeError()
+def get_length_to_nullwindowsmask(motifs_in_seqs, seqlength):
+    motif_lengths = set()
+    occupied_positions = np.zeros((len(motifs_in_seqs), seqlength))
+    for seqidx,motifs_in_seq in enumerate(motifs_in_seqs):
+        for motif in motifs_in_seq:
+            motif_lengths.add(motif.end-motif.start)
+            occupied_positions[seqidx, motif.start:motif.end] = 1.0
+
+    length_to_nullwindowsmask = {}
+    for motif_length in motif_lengths: 
+        window_sums = compute_windowsum(arr=occupied_positions,
+                                        windowlen=motif_length) 
+        length_to_nullwindowsmask[motif_length] = window_sums==0.0
+    return length_to_nullwindowsmask
 
 
-def get_metric_to_perf(pos_windows, neg_windows, windowsummed_imp_scores):
-    raise RuntimeError() #return auroc, auprc
+def get_metric_to_perf(hitlocations, nullwindowsmask, windowsummed_imp_scores):
+    nullwindowscores = windowsummed_imp_scores[nullwindowsmask]
+    class_imbalance = (len(hitlocations)/np.sum(nullwindowsmask))
+    hitscores = list(float(x) for x in
+                     windowsummed_imp_scores[tuple(zip(*hitlocations))]) 
+    y_true = [1 for x in hitscores]+[0 for x in nullwindowscores]
+    y_score = list(hitscores)+list(nullwindowscores)
+    auroc = roc_auc_score(y_true=y_true, y_score=y_score)
+    auprc = average_precision_score(y_true=y_true, y_score=y_score)
+    epr = max_pr_at_recall_exceed_pr(y_true=y_true, y_score=y_score)
+    return {'auroc': auroc, 'auprc': auprc,
+            'fold_increase_over_baseline_auprc': auprc/class_imbalance,
+            'epr': epr, 'fold_increase_over_baseline_epr': epr/class_imbalance}
 
 
 def compute_windowsum(arr, windowlen):
@@ -37,22 +111,24 @@ def compute_windowsum(arr, windowlen):
                            mode='constant',
                            constant_values=0)
     assert cumsum_arr.shape==(arr.shape[0], arr.shape[1]+1)
-    to_return = cumsum_scores[:,windowlen:]-cumsum_scores[:,0:-windowlen]
-    assert to_return.shape==(arr.shape[0], arr.shape[1]-(arr-1))
+    to_return = cumsum_arr[:,windowlen:]-cumsum_arr[:,0:-windowlen]
+    assert to_return.shape==(arr.shape[0], arr.shape[1]-(windowlen-1)),\
+            (to_return.shape, arr.shape, windowlen)
     return to_return
 
 
-def get_motif_to_metric_to_perf(motif_to_length, motif_to_pos_windows,
-                                length_to_neg_windows, imp_scores):
-    motif_to_detection_perf = {}
-    for motif in motif_to_pos_windows:
-        pos_windows = motif_to_pos_windows[motif]
+def get_motif_to_metric_to_perf(motif_to_length, motif_to_hitlocations,
+                                length_to_nullwindowsmask, imp_scores):
+    motif_to_metric_to_perf = {}
+    for motif in motif_to_hitlocations:
+        print("Computing stats for",motif)
+        hitlocations = motif_to_hitlocations[motif]
         motif_length = motif_to_length[motif]
-        neg_windows = length_to_neg_windows[motif_length]
+        nullwindowsmask = length_to_nullwindowsmask[motif_length]
         windowsummed_imp_scores = compute_windowsum(arr=imp_scores,
                                                     windowlen=motif_length)
         motif_to_metric_to_perf[motif] = get_metric_to_perf(
-            pos_windows=pos_windows, neg_windows=neg_windows,
+            hitlocations=hitlocations, nullwindowsmask=nullwindowsmask,
             windowsummed_imp_scores=windowsummed_imp_scores) 
     return motif_to_metric_to_perf
 
@@ -63,26 +139,25 @@ def compute_motif_detection_stats(args):
         read_sequences_and_motifs_file(
             sequences_and_motifs_file=args.sequences_and_motifs)
 
-    motif_to_length = get_motif_to_length(motifs=motifs) 
-    motif_to_pos_windows = get_motif_to_pos_windows(
-                            motifs_in_seqs=motifs_in_seqs,
-                            seqlens=onehot_sequences.shape[2])
-    length_to_neg_windows = get_length_to_neg_windows(
+    motif_to_length = get_motif_to_length(motifs_in_seqs=motifs_in_seqs) 
+    motif_to_hitlocations = get_motif_to_hitlocations(
+                             motifs_in_seqs=motifs_in_seqs)
+    length_to_nullwindowsmask = get_length_to_nullwindowsmask(
                              motifs_in_seqs=motifs_in_seqs, 
-                             lengths=set(motif_to_length.values()),
-                             seqlens=onehot_sequences.shape[2])
+                             seqlength=onehot_sequences.shape[1])
 
     method_to_motif_to_metric_to_perf = {}
     interpretation_h5 = h5py.File(args.interpretation_h5, "r")
-    for key in interpretation_h5:
+    for key in sorted(interpretation_h5.keys()):
         if (key != "seqids"):
+            print("Computing stats for",key)
             imp_scores = np.array(interpretation_h5[key][:])
             motif_to_metric_to_perf = get_motif_to_metric_to_perf(
                 motif_to_length=motif_to_length,
-                motif_to_pos_windows=motif_to_pos_windows,
-                length_to_neg_windows=length_to_neg_windows,
+                motif_to_hitlocations=motif_to_hitlocations,
+                length_to_nullwindowsmask=length_to_nullwindowsmask,
                 imp_scores=imp_scores)
-            method_to_motif_to_metric_to_perf[key] = motif_to_detection_perf
+            method_to_motif_to_metric_to_perf[key] = motif_to_metric_to_perf
     interpretation_h5.close()
 
     #rearrange the dictionary to be metric_to_motif_to_method_to_perf:
@@ -94,7 +169,7 @@ def compute_motif_detection_stats(args):
                     method_to_motif_to_metric_to_perf[method][motif][metric]
 
     #json dump
-    with out_fh as open(args.outfile, 'w'):
+    with open(args.outfile, 'w') as out_fh:
         out_fh.write(json.dumps(metric_to_motif_to_method_to_perf, indent=4))
 
 

@@ -1,0 +1,1 @@
+../../common_scripts/run_motif_detection_stats.sh
