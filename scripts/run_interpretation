@@ -119,14 +119,14 @@ def compute_and_write_scores_flatref(
 def compute_and_write_scores_zeroref(**kwargs):
     flatref = np.zeros(4)[None,None,:]
     compute_and_write_scores_flatref(
-        **kwargs, flatref=flatref, referencename='allzeros')
+        flatref=flatref, referencename='allzeros', **kwargs)
 
 
 def compute_and_write_scores_avgref(onehot_seqs, **kwargs):
     flatref = np.mean(onehot_seqs, axis=(0,1))[None,None,:]
     compute_and_write_scores_flatref(
-        **kwargs, onehot_seqs=onehot_seqs,
-        flatref=flatref, referencename='avgc')
+        onehot_seqs=onehot_seqs,
+        flatref=flatref, referencename='avgc', **kwargs)
 
 
 def compute_and_write_scores_shuffref(methodtypes, methodtype_to_scoringfunc,
