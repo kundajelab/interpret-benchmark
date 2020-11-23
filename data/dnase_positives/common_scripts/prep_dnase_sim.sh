@@ -8,22 +8,49 @@ source /etc/profile.d/modules.sh
 #####
 #only run this if the output file doesn't exist
 if [ ! -f "sequences/negatives.fa" ]; then
+    #zcat peaks_and_bg.narrowPeak.gz | head -100000 | gzip -c > top100k_peaks_and_bg.narrowPeak.gz
     generate_pos_and_neg_fasta ../dnase_sim_config.properties
     #clear bulky temporary files
-    rm sequences/bg_minus_prefiltpositives.fa
-    rm sequences/prefilt_positives.fa
+    rm sequences/bg_minus_pos.bed.gz.fa
+    rm sequences/prefilt_positives.bed.gz.fa
 fi
 
 #####
-#Step 2: run AMR
+#Step 2: run homer
 #####
-module load meme
-ame --verbose 4 --method ranksum --control sequences/negatives.fa --oc sequences/ame_out sequences/positives.fa  ../../JASPAR2020_CORE_vertebrates_non-redundant_pfms_meme.txt
-##using the -b option to speed up the calculation
-#findMotifs.pl sequences/positives.fa fasta sequences/pos_enriched_motifs -fasta sequences/negatives.fa -b
-#findMotifs.pl sequences/negatives.fa fasta sequences/neg_enriched_motifs -fasta sequences/positives.fa -b
+#only run this if the output folder does not exist
+if [ ! -e "sequences/pos_enriched_motifs" ]; then
+    module load homer
+    ##using the -b option to speed up the calculation
+    findMotifs.pl sequences/positives.fa fasta sequences/pos_enriched_motifs -fasta sequences/negatives.fa -b
+fi
 
 ###
-#Step X: run FIMO
+#Step 3: run FIMO
 ###
-../../concat_pos_and_neg_for_fimo.sh sequences/positives.fa sequences/negatives.fa > sequences/concat_pos_and_neg.fa
+if [ ! -e "sequences/fimo_out/fimo.txt.gz" ]; then
+    # write the homer motifs in the meme format, then launch the FIMO run
+    homer2meme sequences/pos_enriched_motifs/homerResults/motif?.motif sequences/pos_enriched_motifs/homerResults/motif??.motif --output_file sequences/filtered_pos_enriched_motifs.meme
+    cat sequences/positives.fa sequences/negatives.fa > sequences/concat_pos_and_neg.fa
+    module load meme
+    fimo --max-stored-scores 5000000 --oc sequences/fimo_out sequences/filtered_pos_enriched_motifs.meme sequences/concat_pos_and_neg.fa 
+    gzip -f sequences/fimo_out/fimo.txt
+fi
+
+###
+#Step 4: generate simulated data
+###
+if [ ! -e "sequences/sim_positives.txt.gz" ]; then
+    generate_simulated_pos_and_neg ../dnase_sim_config.properties
+    gzip -f sequences/sim_positives.txt
+    gzip -f sequences/sim_negatives.txt
+fi
+
+###
+#Step 5: do the train-test split
+###
+../../common_scripts/do_train_test_split.py
+gzip -f sequences/train_sim_positives.txt
+gzip -f sequences/test_sim_positives.txt
+gzip -f sequences/train_sim_negatives.txt
+gzip -f sequences/test_sim_negatives.txt

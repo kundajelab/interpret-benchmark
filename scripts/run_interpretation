@@ -55,7 +55,7 @@ def sanity_check(converted_grad_model, keras_model, onehot_seqs):
 
 
 def compile_scoring_functions(methodtype_to_deepliftmodel,
-                              backprop_methods_set):
+                              backprop_methods_set, num_seqs):
     if (any(['ig' in x for x in backprop_methods_set])):
         gradient_func = (methodtype_to_deepliftmodel['gradtimesinp']
                          .get_target_multipliers_func(find_scores_layer_idx=0,
@@ -73,7 +73,7 @@ def compile_scoring_functions(methodtype_to_deepliftmodel,
             integrated_gradients_func =\
                 deeplift.util.get_integrated_gradients_function(
                   gradient_computation_function=gradient_func,
-                  num_intervals=num_intervals)
+                  num_intervals=num_intervals, num_seqs=num_seqs, record=methodtype + str("-"))
             methodtype_to_scoringfunc[methodtype] = integrated_gradients_func
         else:
             raise RuntimeError("Unsupported methodtype:",methodtype) 
@@ -281,10 +281,10 @@ def run_interpretation(cfg, args):
               .rstrip().split("\t")[0] for x in
               util.open_fh(args.input_seqs_file)]
     sequences = [(x.decode('utf-8') if hasattr(x,'decode') else x)
-                  .rstrip().split("\t")[1] for x in
+                  .rstrip().split(" ")[1] for x in
                  util.open_fh(args.input_seqs_file)] 
     onehot_seqs = util.one_hot_encode(seqs=sequences)
-    
+    num_seqs = len(seqids)
     keras_model_h5 = args.keras_model_h5
     keras_model_json = args.keras_model_json
     if (keras_model_json is None):
@@ -302,7 +302,7 @@ def run_interpretation(cfg, args):
                  keras_model=keras_model, onehot_seqs=onehot_seqs) 
     methodtype_to_scoringfunc = compile_scoring_functions(
             methodtype_to_deepliftmodel=methodtype_to_deepliftmodel,
-            backprop_methods_set=backprop_methods_set) 
+            backprop_methods_set=backprop_methods_set, num_seqs=num_seqs) 
     
     output_h5 = h5py.File(args.output_h5_file)
     if ("seqids" in output_h5):
