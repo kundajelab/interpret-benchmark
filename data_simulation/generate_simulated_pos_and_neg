@@ -1,0 +1,192 @@
+#!/usr/bin/env python
+from __future__ import division, print_function, absolute_import
+import argparse
+import configparser
+import numpy as np
+from vakai import util, dinuc_shuffle
+from vakai import motifhit
+from vakai.motifhit import MotifHit, motifhit_to_str
+from collections import defaultdict, namedtuple
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
+
+
+rc_map = {'A': 'T', 'a':'t',
+          'C': 'G', 'c': 'g',
+          'G': 'C', 'g': 'c',
+          'T': 'A', 't': 'a'}
+
+
+def take_rc(seq):
+    return "".join(rc_map[x] for x in seq[::-1])
+    
+
+def read_fimo(file_handle):
+    seqid_to_hits = defaultdict(list)
+    for line_idx,line in enumerate(file_handle):
+        if (line_idx > 1):
+            if (hasattr(line, 'decode')):
+                line = line.decode('utf-8')
+            line = line.rstrip()
+            arr = line.split("\t")
+            motifid = arr[0]
+            seqid = arr[1]
+            start = int(arr[2])-1
+            end = int(arr[3])
+            assert arr[4]=="+" or arr[4]=="-"
+            onposstrand = True if (arr[4]=="+") else False
+            score = float(arr[5])
+            pval = float(arr[6])
+            qval = float(arr[7])
+            matchedseq = (arr[8] if onposstrand else take_rc(arr[8]))
+            seqid_to_hits[seqid].append(
+                MotifHit(motifid=motifid, seqid=seqid,
+                         start=start, end=end,
+                         onposstrand=onposstrand,
+                         score=score, pval=pval,
+                         qval=qval, matchedseq=matchedseq))
+    return seqid_to_hits
+
+
+def make_motifid_to_hits(seqid_to_hits, pos_seqids_set, neg_seqids_set):
+    motifid_to_poshits = defaultdict(list)
+    motifid_to_neghits = defaultdict(list)
+    for seqid in seqid_to_hits:
+        hits = seqid_to_hits[seqid]
+        for motif in hits:
+            if (seqid in pos_seqids_set):
+                motifid_to_poshits[motif.motifid].append(motif)
+            else:
+                assert seqid in neg_seqids_set
+                motifid_to_neghits[motif.motifid].append(motif)
+    return motifid_to_poshits, motifid_to_neghits
+
+
+def generate_simulated_pos_and_neg(cfg):
+    seqid_to_hits = read_fimo(util.open_fh(cfg['FIMO_FILE']))
+    pos_idsandseqs = util.load_fasta(cfg['POSITIVES_FASTA'])
+    neg_idsandseqs = util.load_fasta(cfg['NEGATIVES_FASTA'])
+    motifid_to_poshits, motifid_to_neghits = make_motifid_to_hits(
+        seqid_to_hits=seqid_to_hits,
+        pos_seqids_set=set([x[0] for x in pos_idsandseqs]),
+        neg_seqids_set=set([x[0] for x in neg_idsandseqs]))
+
+    motifids = sorted(motifid_to_poshits.keys())
+    passing_motif_ids = set()
+
+    REGION_SIZE = cfg.getint('REGION_SIZE')
+    MIN_ENRICHMENT_SCORE = float(cfg['MIN_ENRICHMENT_SCORE'])
+    MIN_POS_HITS = int(cfg['MIN_POS_HITS'])
+    OUTDIR = cfg['OUTDIR']
+
+    retained_motifs_logfh = open(OUTDIR+"/retained_motifs.log","w")
+    retained_motifs_logfh.write(
+     "motif\tnposhits\tnneghits\t"
+    +"poshitdensity\tneghitdensity\thitdensityratio\t"
+    +"weightedposhitdensity\tweightedneghitdensity\tweightedhitdensityratio\n")
+    for motifid in motifids:
+        pos_hits = motifid_to_poshits[motifid]
+        neg_hits = motifid_to_neghits[motifid]
+        pos_hit_density = len(pos_hits)/len(pos_idsandseqs)
+        neg_hit_density = len(neg_hits)/len(neg_idsandseqs)
+        hit_density_ratio = pos_hit_density/neg_hit_density
+        half_region_size = REGION_SIZE/2
+        total_weighted_pos_hits = sum([(half_region_size
+                                        - abs(half_region_size-x.start))**2
+                                       for x in pos_hits])
+        total_weighted_neg_hits = sum([(half_region_size
+                                        - abs(half_region_size-x.start))**2
+                                       for x in neg_hits])
+        weighted_pos_hit_density = total_weighted_pos_hits/len(pos_idsandseqs)
+        weighted_neg_hit_density = total_weighted_neg_hits/len(neg_idsandseqs)
+        weighted_hit_density_ratio = (weighted_pos_hit_density/
+                                      weighted_neg_hit_density)
+        #print(motifid, len(pos_hits), enrichment_score)
+        if (len(pos_hits) >= MIN_POS_HITS
+            and weighted_hit_density_ratio >= MIN_ENRICHMENT_SCORE):
+            passing_motif_ids.add(motifid)
+            retained_motifs_logfh.write(
+             motifid+"\t"
+             +str(len(pos_hits))+"\t"
+             +str(len(neg_hits))+"\t"
+             +str(pos_hit_density)+"\t"
+             +str(neg_hit_density)+"\t"
+             +str(hit_density_ratio)+"\t" 
+             +str(weighted_pos_hit_density)+"\t"
+             +str(weighted_neg_hit_density)+"\t"
+             +str(weighted_hit_density_ratio)+"\n")
+    retained_motifs_logfh.close()
+
+    POS_SIM_OUTFILE = OUTDIR+"/"+cfg['POS_SIM_OUTFILE']
+    NEG_SIM_OUTFILE = OUTDIR+"/"+cfg['NEG_SIM_OUTFILE']
+
+    rng = np.random.RandomState(1234)
+
+    #count the number of positions occupied by the motifs
+    pos_occupied_positions = np.zeros((len(pos_idsandseqs), REGION_SIZE))
+    pos_sim_outfh = open(POS_SIM_OUTFILE, 'w')
+    skipped_pos_seqs = 0
+    fp = open("backgrounds.txt", "w")
+    for pos_idx,(pos_seq_id, orig_pos_seq) in enumerate(pos_idsandseqs):
+        dn_shuffled_bg = [x for x in
+                          dinuc_shuffle.dinuc_shuffle(s=orig_pos_seq, rng=rng)]
+        fp.write(pos_seq_id + "\t")
+        fp.write("".join(dn_shuffled_bg))
+        fp.write("\n")
+        motif_hits_in_seq = [x for x in seqid_to_hits[pos_seq_id]
+                             if x.motifid in passing_motif_ids]
+        if (len(motif_hits_in_seq) > 0):
+            for motif_hit in motif_hits_in_seq:
+                assert (motif_hit.matchedseq
+                        ==orig_pos_seq[motif_hit.start:motif_hit.end])
+                dn_shuffled_bg[motif_hit.start:motif_hit.end] =\
+                    motif_hit.matchedseq
+                pos_occupied_positions[pos_idx,motif_hit.start:
+                                               motif_hit.end] = 1
+            simulated_seq = "".join(dn_shuffled_bg)
+            pos_sim_outfh.write(pos_seq_id+"\t"+simulated_seq+"\t"+
+                  (",".join([motifhit_to_str(x) for x in motif_hits_in_seq]))+"\n") 
+        else:
+            skipped_pos_seqs += 1
+    pos_sim_outfh.close()
+    print("Skipped ",skipped_pos_seqs,"out of",len(pos_idsandseqs),
+          "that had no motif hits")
+    
+    neg_occupied_positions = np.zeros((len(neg_idsandseqs), REGION_SIZE))
+    neg_sim_outfh = open(NEG_SIM_OUTFILE, 'w')
+    for neg_idx,(neg_seq_id,orig_neg_seq) in enumerate(neg_idsandseqs):
+        random_pos_seq = pos_idsandseqs[rng.choice(a=len(pos_idsandseqs))][1]
+        dn_shuffled_bg = [x for x in dinuc_shuffle.dinuc_shuffle(
+                          s=random_pos_seq, rng=rng)]
+        fp.write(neg_seq_id + "\t")
+        fp.write("".join(dn_shuffled_bg))
+        fp.write("\n")
+        motif_hits_in_seq = [x for x in seqid_to_hits[neg_seq_id]
+                             if x.motifid in passing_motif_ids]
+        for motif_hit in motif_hits_in_seq:
+            assert (motif_hit.matchedseq
+                    ==orig_neg_seq[motif_hit.start:motif_hit.end])
+            dn_shuffled_bg[motif_hit.start:
+                           motif_hit.end] = motif_hit.matchedseq
+            neg_occupied_positions[neg_idx,motif_hit.start:motif_hit.end] = 1
+        simulated_seq = "".join(dn_shuffled_bg)
+        neg_sim_outfh.write(neg_seq_id+"\t"+simulated_seq+"\t"+
+              (",".join([motifhit_to_str(x) for x in motif_hits_in_seq]))+"\n") 
+    neg_sim_outfh.close()
+
+    plt.hist(np.sum(pos_occupied_positions,axis=-1),
+             density=True, bins=20, alpha=0.5)
+    plt.hist(np.sum(neg_occupied_positions,axis=-1),
+             density=True, bins=20, alpha=0.5)
+    plt.savefig(OUTDIR+"/occupied_positions_histogram.png")
+    
+    fp.close() 
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser() 
+    parser.add_argument("configfile")
+    args = parser.parse_args()
+    cfg = configparser.ConfigParser() 
+    cfg.read(args.configfile)
+    generate_simulated_pos_and_neg(cfg['GENSIM'])
