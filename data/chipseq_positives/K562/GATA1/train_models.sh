@@ -1,1 +1,0 @@
-../../common_scripts/train_models.sh
