@@ -1,1 +1,0 @@
-../../scripts/getrandom.py
